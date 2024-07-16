@@ -9,7 +9,7 @@ User Schema
     intrests S
     Jobs{ O
         jobid ObjectId
-        status S
+        status enum
         taskId ObjectId
     }
 
@@ -23,7 +23,7 @@ Jobs Schema
     due_date date
     techStack A
     eligibility S
-    type //internship,part time, fulltime , remote S
+    type //internship,part time, fulltime , remote enum
     addedBy S
 
 Task Schema
@@ -31,3 +31,4 @@ Task Schema
     task name S
     description S
     due date date
+    status
