@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   name: {
     type: String,
-    required: true,
     trim: true
   },
   email: {
@@ -21,7 +20,6 @@ const userSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: true,
     trim: true
   },
   password: {
@@ -30,26 +28,9 @@ const userSchema = new Schema({
     minlength: 6
   },
   securityQuestions: {
-    type: [{
-      question: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      answer: {
-        type: String,
-        required: true,
-        trim: true
-      }
-    }],
-    validate: {
-      validator: function (v) {
-        return v.length >= 0;
-      },
-      message: props => `At least 3 security questions are required`
-    }
+    type: [Object]
   },
-  clgInfo: {
+  otherInfo: {
     type: Schema.Types.ObjectId,
     ref: 'ClgInfo'
   },

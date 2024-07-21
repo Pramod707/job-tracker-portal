@@ -1,53 +1,83 @@
-const express = require('express')
-const app = express()
-const { emailService } = require('../services/email')
-const { otpGenerator } = require('../services/otp')
-const { setToken, getUser } = require('../services/token')
-const User = require('../models/userModel')
+const express = require('express');
+const app = express();
+const { emailService } = require('../services/email');
+const { otpGenerator } = require('../services/otp');
+const { setToken, getUser } = require('../services/token');
+const User = require('../models/userModel');
+const UserInfo = require('../models/otherInfo');
 
 app.post('/', async (req, res) => {
-    const { username, email, password, rollNumber, phoneNumber } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    if (!username || !email || !password || !rollNumber) {
-        return res.status(400).json({ message: 'Please enter all the fields' });
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please enter all the fields' });
+        }
+
+        const otp = otpGenerator();
+
+        const user = await User.create({
+            email,
+            password,
+            otp
+        });
+
+        setTimeout(async () => {
+            await User.deleteOne({ email });
+        }, 10000 * 12);
+
+        const token = setToken(user);
+        const resp = await emailService(email, otp);
+        if (resp) {
+            return res.status(200).json({ token, otp, success: true });
+        } else {
+            return res.status(500).json({ success: false, message: 'Failed to send email' });
+        }
+    } catch (error) {
+        console.error('Error during user creation:', error);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
+});
 
-    const otp = otpGenerator();
+app.post('/details', async (req, res) => {
+    try {
+        const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack, } = req.body;
+        const token = req.headers.authorization.split(' ')[1];
+        const payload = getUser(token);
+        if (!payload) {
+            return res.status(401).json({ success: false, message: 'Invalid token' });
+        }
+        const user = await User.findOne({ email: payload.email });
 
-    const user = await User.create({
-        name: username,
-        email,
-        password,
-        email,
-        phoneNumber,
-        otp
-    })
+        user.name = username;
+        user.phoneNumber = phoneNumber;
+        user.securityQuestions = securityQuestions;
+        await user.save();
 
-    setTimeout(async () => {
-        await User.deleteOne({ email })
-    }, 10000 * 12)
+        const detailsExists = await UserInfo.findOne({ userId: user._id });
+        if (detailsExists) {
+            detailsExists.branch = branch;
+            detailsExists.joiningYear = joiningYear;
+            detailsExists.intrests = intrests;
+            detailsExists.techStack = techStack;
+            await detailsExists.save();
+        }
+        else {
+            const details = await UserInfo.create({
+                userId: user._id,
+                branch,
+                joiningYear,
+                intrests,
+                techStack
+            });
+        }
 
-    const token = setToken(user);
-    const resp = await emailService(email, otp, username)
-    resp ? res.status(200).json({ token, otp, "success": true }) : res.status(500).json({ "success": false })
+
+        return res.status(200).json({ success: true, message: 'Details added successfully' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 })
 
-app.post('/otp', async (req, res) => {
-    const { otp: userOtp } = req.body;
-    const token = req.headers.authorization.split(" ")[1];
-    const payload = getUser(token);
-    if (!payload) return res.status(500).json({ "success": false })
-
-    const user = await User.findOne({ email: payload.email })
-    console.log(user.otp);
-    console.log(userOtp);
-    if (userOtp == user.otp) {
-        user.otp = 0;
-        return res.status(200).json({ msg: "Valid otp", "success": true })
-    } else {
-        await User.deleteOne({ email: payload.email })
-        return res.status(500).json({ msg: "Invalid otp", success: false })
-    }
-})
-
-module.exports = app
+module.exports = app;

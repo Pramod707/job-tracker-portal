@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const clgInfoSchema = new Schema({
+const otherInfoSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    unique: true
   },
   branch: {
     type: String,
@@ -18,7 +19,7 @@ const clgInfoSchema = new Schema({
     min: [2007, 'Joining year must be after 2007'],
     max: [new Date().getFullYear(), 'Joining year cannot be in the future']
   },
-  interests: {
+  intrests: {
     type: String,
     required: true,
     trim: true
@@ -48,5 +49,5 @@ const clgInfoSchema = new Schema({
   timestamps: true
 });
 
-const ClgInfo = mongoose.model('ClgInfo', clgInfoSchema);
-module.exports = ClgInfo;
+const otherInfo = mongoose.model('otherInfo', otherInfoSchema);
+module.exports = otherInfo;
