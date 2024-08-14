@@ -1,11 +1,12 @@
 import React from 'react'
-import Footer from './components/Footer'
+import ResetPassword from './auth/ResetPassword'
+
 
 
 const App = () => {
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
-      <Footer />
+      <ResetPassword />
     </div>
   )
 }
