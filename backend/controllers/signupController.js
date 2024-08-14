@@ -37,7 +37,7 @@ const signupUser = async (req, res) => {
         });
 
         setTimeout(async () => {
-            await User.deleteOne({ email });
+            await User.deleteOne({ email, verified:false  });
         }, 10000 * 12);
 
         const token = setToken(user);

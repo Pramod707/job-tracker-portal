@@ -16,6 +16,7 @@ const otpVerification = async (req, res) => {
         }
 
         if (userOtp == user.otp) {
+            user.verified = true;
             user.otp = 0;
             await user.save();
             return res.status(200).json({ message: 'Valid otp', success: true });
