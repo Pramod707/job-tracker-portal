@@ -1,50 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-import Ak from "./Ak.jsx";
-import Signup from "./Signup.jsx";
-import LoginPage from "./Login.jsx";
-//import Home from "./Home.jsx";
-import { NextUIProvider } from "@nextui-org/react";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import Navbar from './components/Navbar';
+import {NextUIProvider} from "@nextui-org/react";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/login",
-    element: <Ak/>,
-  },
-  {
-    path: "/signup",
-    element: <Signup/>,
-  },
-  {
-    path: "/page",
-    element: <LoginPage/>,
-  },
-  // {
-  //   path: "/home",
-  //   element: <Home/>,
-  // },
-
-
-]);
-
-
-
-
-
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <NextUIProvider>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  </NextUIProvider>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <NextUIProvider>
+      <div className="bg-primary min-h-screen px-[4rem] py-[1rem]">
+        <Navbar />
+        <App />
+      </div>
+    </NextUIProvider>
+  </React.StrictMode>
 );
-
