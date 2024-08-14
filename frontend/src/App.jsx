@@ -1,10 +1,11 @@
 import React from 'react'
-import Signup from './auth/Signup'
+import Footer from './components/Footer'
+
 
 const App = () => {
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
-      <Signup/>
+      <Footer />
     </div>
   )
 }

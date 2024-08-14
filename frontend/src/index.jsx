@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <NextUIProvider>
-      <div className="bg-primary min-h-screen px-[4rem] py-[1rem]">
+      <div className="bg-primary min-h-screen px-[4rem]">
         <Navbar />
         <App />
       </div>
