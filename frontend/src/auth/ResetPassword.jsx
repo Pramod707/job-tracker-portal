@@ -9,7 +9,7 @@ const ResetPassword = () => {
             </div>
             <div className='flex flex-col justify-center items-center bg-[#F4F6F6] p-[2rem] rounded-md gap-[2rem] text-center'>
                 <img src="/mini_icons/successful.svg" alt="success" draggable={false} />
-                <p>Your password has been reset. Go back to login page and login with your new password.</p>
+                <p className='lg:max-w-[80%]'>Your password has been reset. Go back to login page and login with your new password.</p>
             </div>
         </div>
         <div className='py-[1rem]'>

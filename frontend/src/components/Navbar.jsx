@@ -7,10 +7,10 @@ const Navbar = () => {
         <img src="/logo.svg" alt="logo" draggable={false} />
       </a>
       <div className='flex flex-row justify-center items-center gap-[1rem]'>
-        <a href='##' className='px-[1rem] py-[0.5rem]'>Login</a>
+        <a href='##' className='px-[1rem] py-[0.5rem] font-black'>Login</a>
         <a 
           href='##'
-          className='border border-[#DCE3E3] bg-white px-[1rem] py-[0.5rem] rounded-[8px] shadow-lg shadow-[#EAEFEF]'
+          className='border border-[#DCE3E3] bg-white px-[1rem] py-[0.5rem] rounded-[8px] shadow-lg shadow-[#EAEFEF] font-black'
         >
           Download
         </a>
