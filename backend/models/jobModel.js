@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const jobSchema = new mongoose.Schema({
+const jobSchema = new Schema({
     companyName: {
         type: String,
         required: true,
@@ -21,7 +22,7 @@ const jobSchema = new mongoose.Schema({
         required: true,
         trim: true,
         validate: {
-            validator: function(v) {
+            validator: function (v) {
                 return /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(v);
             },
             message: props => `${props.value} is not a valid URL!`
@@ -39,7 +40,7 @@ const jobSchema = new mongoose.Schema({
     requiredTechStack: {
         type: [String],
         validate: {
-            validator: function(v) {
+            validator: function (v) {
                 return v.length > 0;
             },
             message: props => `At least one technology stack is required`
@@ -65,5 +66,5 @@ const jobSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Job=mongoose.model('Job', jobSchema);
+const Job = mongoose.model('Job', jobSchema);
 module.exports = Job;

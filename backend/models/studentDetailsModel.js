@@ -49,5 +49,5 @@ const otherInfoSchema = new Schema({
   timestamps: true
 });
 
-const otherInfo = mongoose.model('otherInfo', otherInfoSchema);
-module.exports = otherInfo;
+const studentDetails = mongoose.model('studentDetails', otherInfoSchema);
+module.exports = studentDetails;

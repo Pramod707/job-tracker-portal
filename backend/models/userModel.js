@@ -30,12 +30,12 @@ const userSchema = new Schema({
   securityQuestions: {
     type: [Object]
   },
-  otherInfo: {
+  studentDetails: {
     type: Schema.Types.ObjectId,
-    ref: 'ClgInfo'
+    ref: 'studentDetails'
   },
-  otp:{
-    type:Number
+  otp: {
+    type: Number
   }
 }, {
   timestamps: true
