@@ -34,9 +34,6 @@ const Login = () => {
         <Button
           className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
         >Send OTP</Button>
-        <Button
-          className='w-full text-white bg-gradient-to-b from-[#0037FF] to-[#002DD1] border-2'
-        >Sign Up with Email</Button>
       </form>
     </div>
   )
