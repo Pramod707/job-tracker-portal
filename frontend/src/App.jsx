@@ -13,15 +13,11 @@ const App = () => {
       <Routes>
         <Route path='/' element={<></>} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/add-details' element={<Details />} />
+        <Route path='/signup/add-details' element={<Details />} />
         <Route path='/login' element={<Login />} />
         <Route path='/otp' element={<OtpInput />} />
         <Route path='/reset-password' element={<ResetPassword />} />
       </Routes>
-
-      <div className='flex flex-col justify-center items-center h-screen'>
-        Home
-      </div>
     </>
   )
 }
