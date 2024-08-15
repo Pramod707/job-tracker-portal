@@ -1,4 +1,5 @@
 import React from 'react'
+<<<<<<< Updated upstream
 import { Routes, Route } from 'react-router-dom';
 import OtpInput from './auth/OTP';
 import Signup from './auth/Signup';
@@ -21,6 +22,16 @@ const App = () => {
         Home
       </div>
     </>
+=======
+import Sidebar from './components/Sidebar'
+import Details from './auth/Details'
+
+const App = () => {
+  return (
+    <div className='h-screen'>
+      <Details />
+    </div>
+>>>>>>> Stashed changes
   )
 }
 
