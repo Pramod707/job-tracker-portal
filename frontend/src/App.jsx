@@ -6,7 +6,8 @@ import Login from './auth/Login';
 import ResetPassword from './auth/ResetPassword';
 import Details from './auth/Details';
 import Dashboard from './dashboard/Dashboard';
-
+import PrivacyAndPolicy from "./components/PrivacyAndPolicy"
+import TermsAndConditions from './components/TermsAndConditions'
 const App = () => {
   const location = useLocation();
 
@@ -22,6 +23,8 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/otp' element={<OtpInput />} />
         <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/privacypolicy' element={<PrivacyAndPolicy />} />
+        <Route path='/terms&conditions' element={<TermsAndConditions />} />
       </Routes>
     </div>
   );

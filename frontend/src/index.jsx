@@ -12,7 +12,7 @@ const Layout = () => {
   const location = useLocation();
 
   // Define which routes should show the Navbar or Sidebar
-  const authRoutes = ['/signup', '/login', '/otp', '/reset-password', '/signup/add-details'];
+  const authRoutes = ['/signup', '/login', '/otp', '/reset-password', '/signup/add-details', '/privacypolicy', '/terms&conditions'];
   const showNavbar = authRoutes.includes(location.pathname);
   const showSidebar = location.pathname === '/';
 

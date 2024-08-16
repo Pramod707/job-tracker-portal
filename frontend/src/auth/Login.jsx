@@ -32,9 +32,9 @@ const Login = () => {
       <div className='flex flex-col justify-center items-center gap-[1rem] max-w-[80%] text-center border-b py-[2rem] border-dotted border-[#adadad]'>
         <h1 className='text-2xl font-bold'>Login</h1>
         <p>By signing up, I agree to the taskhub
-          <span className='text-[#0037FF]'><a href="##"> Privacy Policy </a></span>
+          <span className='text-[#0037FF]'><a href="/privacypolicy"> Privacy Policy </a></span>
           and
-          <span className='text-[#0037FF]'><a href="##"> Terms of Service </a></span>
+          <span className='text-[#0037FF]'><a href="/terms&conditions"> Terms of Service </a></span>
         </p>
       </div>
 
