@@ -21,12 +21,12 @@ const otherInfoSchema = new Schema({
   },
   intrests: {
     type: String,
+    enum: ['govt job', 'internship', 'pvt job', 'core job', 'mtech', 'ms'],
     required: true,
     trim: true
   },
   techStack: {
-    type: [String],
-    default: []
+    type: String
   },
   jobs: {
     applied: [{

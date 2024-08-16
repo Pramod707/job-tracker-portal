@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,31 +8,33 @@ const Signup = () => {
     email: "",
     password: ""
   });
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (formDetails.email === "" || formDetails.password === "") {
+      setMessage("Please enter email and password");
+      return;
+    }
+
     try {
-      axios.post('http://localhost:3001/api/signup', formDetails)
-        .then((response) => {
-          if (response.data.success) {
-            setMessage("");
-            document.cookie = `token=${response.data.token}`;
-            navigate('/otp');
-          }
-          else {
-            setMessage(response.data.message);
-          }
-        })
+      const response = await axios.post('http://localhost:3001/api/signup', formDetails);
+
+      if (response.data.success) {
+        setMessage("");
+        document.cookie = `token=${response.data.token}`;
+        navigate('/otp');
+        setFormDetails({ email: "", password: "" });
+      } else {
+        setMessage(response.data.message || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error during signup:", err);
+      setMessage("An error occurred. Please try again later.");
     }
-    catch (err) {
-      console.log(err);
-    } finally {
-      setFormDetails({ email: "", password: "" })
-    }
-    
-  }
+  };
 
   return (
     <div className="bg-white px-[2rem] py-[2rem] flex flex-col justify-center items-center gap-[2rem] rounded-xl">
@@ -46,9 +48,9 @@ const Signup = () => {
       </div>
 
       {message && <p className="text-red-500">{message}</p>}
-      <form onSubmit={(e) => handleSignup(e)} className='w-full flex flex-col gap-[1rem] justify-center items-center'>
+      <form onSubmit={handleSignup} className='w-full flex flex-col gap-[1rem] justify-center items-center'>
         <Input
-          isRequired
+          required
           type="email"
           label="Email"
           placeholder='johndoe@gmail.com'
@@ -57,7 +59,7 @@ const Signup = () => {
           onChange={(e) => setFormDetails({ ...formDetails, email: e.target.value })}
         />
         <Input
-          isRequired
+          required
           type="password"
           label="Password"
           placeholder='********'
@@ -66,14 +68,15 @@ const Signup = () => {
           onChange={(e) => setFormDetails({ ...formDetails, password: e.target.value })}
         />
 
-        {/* CTA Buttons */}
         <Button
           type="submit"
           className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
-        >Send OTP</Button>
+        >
+          Send OTP
+        </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

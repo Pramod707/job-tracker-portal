@@ -22,9 +22,9 @@ const signupUser = async (req, res) => {
             minNumbers: 1,
             minSymbols: 1
         };
-    
+
         const validPassword = validator.isStrongPassword(password, options);
-        if(!validPassword) {
+        if (!validPassword) {
             return res.status(400).json({ message: 'Password is not strong enough' });
         }
 
@@ -37,7 +37,7 @@ const signupUser = async (req, res) => {
         });
 
         setTimeout(async () => {
-            await User.deleteOne({ email, verified:false  });
+            await User.deleteOne({ email, verified: false });
         }, 10000 * 12);
 
         const token = setToken(user);
@@ -55,7 +55,7 @@ const signupUser = async (req, res) => {
 
 const addDetails = async (req, res) => {
     try {
-        const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack, } = req.body;
+        const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
         const token = req.headers.authorization.split(' ')[1];
         const payload = getUser(token);
         if (!payload) {
@@ -75,8 +75,7 @@ const addDetails = async (req, res) => {
             detailsExists.intrests = intrests;
             detailsExists.techStack = techStack;
             await detailsExists.save();
-        }
-        else {
+        } else {
             const details = await UserInfo.create({
                 userId: user._id,
                 branch,
@@ -85,7 +84,6 @@ const addDetails = async (req, res) => {
                 techStack
             });
         }
-
 
         return res.status(200).json({ success: true, message: 'Details added successfully' });
     } catch (err) {
