@@ -19,7 +19,7 @@ const Layout = () => {
   return (
     <div className='w-full'>
       {showNavbar && <div className="bg-primary min-h-screen px-[4rem]"><Navbar /><App/></div>}
-      {showSidebar && <div className='bg-primary min-h-screen flex-row flex w-full py-[0.5rem] pr-[0.5rem]'><Sidebar /><App/></div>}
+      {showSidebar && <div className='bg-primary min-h-screen flex-row flex w-full'><Sidebar /><App/></div>}
     </div>
   );
 };
