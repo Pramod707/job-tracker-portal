@@ -9,7 +9,7 @@ import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
 const ActionBar = () => {
   return (
-    <div className='border-b-3 border-dotted mx-[1rem] py-[1rem] flex flex-row justify-between items-center'>
+    <div className='border-b-3 border-dotted pb-[1rem] flex flex-row justify-between items-center'>
         {/* Views */}
         <div className='flex flex-row justify-center items-center gap-[1rem]'>
             <Button
