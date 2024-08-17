@@ -19,7 +19,7 @@ const AssignedTasks = () => {
     else{
       return(
         <div className='flex flex-col justify-center items-center py-[4rem] gap-[2rem]'>
-          <img src="/placeholders/home_jobs.svg" alt="" />
+          <img src="/placeholders/home_jobs.svg" alt="jobs" draggable={false} />
           <div className='flex flex-col justify-center items-center'>
             <h2 className='font-semibold text-[#3F5D5A]'>You don't assigned to any task</h2>
             <p className='text-[#72908D] text-sm'>List of tasks you've assigned to will appear here.</p>

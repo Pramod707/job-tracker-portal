@@ -6,6 +6,31 @@ import ContactCard from './ContactCard';
 import AddIcon from '@mui/icons-material/Add';
 
 const Contacts = () => {
+  const ContactsList=()=>{
+    if(false){
+      return (
+        <div className='grid grid-cols-3 gap-[1rem]'>
+            <ContactCard />
+            <ContactCard />
+            <ContactCard />
+            <ContactCard />
+            <ContactCard />
+            <ContactCard />
+        </div>
+      );
+    }
+    else{
+      return(
+        <div className='flex flex-col justify-center items-center py-[4rem] gap-[2rem]'>
+          <img src="/placeholders/home_contacts.svg" alt="contacts" draggable={false} />
+          <div className='flex flex-col justify-center items-center'>
+            <h2 className='font-semibold text-[#3F5D5A]'>There's no people in your workspace</h2>
+            <p className='text-[#72908D] text-sm'>Start inviting your co-workers now!</p>
+          </div>
+        </div>
+      )
+    }
+  }
   return (
     <div className='bg-white border border-[#EDF1F1] w-full h-fit rounded-xl p-[1rem]'>
         <div className='flex flex-row justify-between items-center border-b-3 border-dotted pb-[1rem] mb-[1rem]'>
@@ -26,14 +51,7 @@ const Contacts = () => {
         </div>
 
         {/* Contacts Grid */}
-        <div className='grid grid-cols-3 gap-[1rem]'>
-            <ContactCard />
-            <ContactCard />
-            <ContactCard />
-            <ContactCard />
-            <ContactCard />
-            <ContactCard />
-        </div>
+        {ContactsList()}
     </div>
   )
 }
