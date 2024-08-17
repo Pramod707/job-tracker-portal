@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const DashBar = () => {
     // Reference to the search input
@@ -26,7 +27,7 @@ const DashBar = () => {
     }, []);
 
     return (
-        <div className='flex flex-row justify-between items-center w-full h-fit p-[1rem]'>
+        <div className='flex flex-row justify-between items-center w-full h-fit'>
             {/* Page Title */}
             <div className='w-full'>
                 <h1 className='text-2xl font-black'>My Tasks</h1>
@@ -49,20 +50,19 @@ const DashBar = () => {
                 </div>
                 
                 {/* Utils */}
-                <div className='flex flex-row justify-center items-center border-l border-r border-[#B9C7C6] px-[1rem] select-none'>
-                    <button>
-                        <img src="/mini_icons/preferences.svg" alt="preferences" className='mx-[0.5rem]' draggable={false} />
+                <div className='flex flex-row justify-center items-center border-l border-r border-[#B9C7C6] px-[1rem] select-none gap-[1rem]'>
+                    <button className='flex-shrink-0'>
+                        <img src="/mini_icons/preferences.svg" alt="preferences" className='w-[28px] h-[28px]' draggable={false} />
                     </button>
                     
-                    <button>
-                        <img src="/mini_icons/info.svg" alt="info" className='mx-[0.5rem]' draggable={false} />
+                    <button className='flex-shrink-0'>
+                        <img src="/mini_icons/info.svg" alt="info" className='w-[28px] h-[28px]' draggable={false} />
                     </button>
                 </div>
+
                 
                 {/* Profile Button */}
-                <button className=' bg-[#DCE3E3] border-[2px] border-[#B9C7C6] rounded-full size-[2rem] select-none'>
-                    JB
-                </button>
+                <AccountCircleIcon className=' bg-[#DCE3E3] border-[#B9C7C6] rounded-full w-[80px] h-[80px] select-none'/>
             </div>
 
         </div>
