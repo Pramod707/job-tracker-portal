@@ -5,6 +5,30 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TaskCard from './TaskCard';
 
 const AssignedTasks = () => {
+  const TaskList=()=>{
+    if(false){
+      return(
+        <div className='flex flex-col justify-center items-center gap-[1rem]'>
+          <TaskCard />
+          <TaskCard />
+          <TaskCard />
+          <Button fullWidth={true} className="text-[#4F7471] font-black bg-[#EDF1F1]">Show All</Button>
+        </div>
+      )
+    }
+    else{
+      return(
+        <div className='flex flex-col justify-center items-center py-[4rem] gap-[2rem]'>
+          <img src="/placeholders/home_jobs.svg" alt="" />
+          <div className='flex flex-col justify-center items-center'>
+            <h2 className='font-semibold text-[#3F5D5A]'>You don't assigned to any task</h2>
+            <p className='text-[#72908D] text-sm'>List of tasks you've assigned to will appear here.</p>
+          </div>
+        </div>
+      )
+    }
+  }
+
   return (
     <div className='bg-[#F4F6F6] w-full h-fit rounded-xl p-[1rem]'>
         <div className='flex flex-row justify-between items-center border-b-3 border-dotted pb-[1rem] mb-[1rem]'>
@@ -21,12 +45,7 @@ const AssignedTasks = () => {
         </div>
 
         {/* Tasks List */}
-        <div className='flex flex-col justify-center items-center gap-[1rem]'>
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
-          <Button fullWidth={true} className="text-[#4F7471] font-black bg-[#EDF1F1]">Show All</Button>
-        </div>
+        {TaskList()}
 
     </div>
   )
