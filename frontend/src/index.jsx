@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar'; // Import Sidebar
 import { NextUIProvider } from "@nextui-org/react";
 import { useLocation } from 'react-router-dom';
+import { SidebarProvider } from './contexts/SidebarContext';
 
 const Layout = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Layout = () => {
   return (
     <div className='w-full'>
       {showNavbar && <div className="bg-primary min-h-screen px-[4rem]"><Navbar /><App/></div>}
-      {showSidebar && <div className='bg-primary min-h-screen flex-row flex w-full'><Sidebar /><App/></div>}
+      {showSidebar && <div className='bg-primary min-h-screen flex-row flex w-full'><SidebarProvider><Sidebar /><App/></SidebarProvider></div>}
     </div>
   );
 };
