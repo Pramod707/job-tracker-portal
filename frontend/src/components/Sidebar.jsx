@@ -3,7 +3,7 @@ import { Button } from '@nextui-org/react';
 import { useSidebar } from '../contexts/SidebarContext';
 
 const Sidebar = () => {
-  const { activeTab, setActiveTab } = useSidebar('home');
+  const { activeTab, setActiveTab } = useSidebar();
 
   const menuItems = [
     { id: 'home', label: 'Home', icon: '/mini_icons/home.svg' },
