@@ -26,7 +26,7 @@ const otherInfoSchema = new Schema({
     trim: true
   },
   techStack: {
-    type: String
+    type: []
   },
   jobs: {
     applied: [{
