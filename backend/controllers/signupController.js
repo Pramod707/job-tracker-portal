@@ -1,6 +1,6 @@
 const { emailService } = require('../services/email');
 const { otpGenerator } = require('../services/otp');
-const { setToken, getUser } = require('../services/token');
+const { setToken } = require('../services/token');
 
 const validator = require('validator');
 
@@ -56,12 +56,7 @@ const signupUser = async (req, res) => {
 const addDetails = async (req, res) => {
     try {
         const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
-        const token = req.headers.authorization.split(' ')[1];
-        const payload = getUser(token);
-        if (!payload) {
-            return res.status(401).json({ success: false, message: 'Invalid token' });
-        }
-        const user = await User.findOne({ email: payload.email });
+        const user = await User.findOne({ email: req.user });
 
         user.name = username;
         user.phoneNumber = phoneNumber;
@@ -76,7 +71,7 @@ const addDetails = async (req, res) => {
             detailsExists.techStack = techStack;
             await detailsExists.save();
         } else {
-            const details = await UserInfo.create({
+            await UserInfo.create({
                 userId: user._id,
                 branch,
                 joiningYear,
