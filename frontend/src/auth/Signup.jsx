@@ -30,9 +30,9 @@ const Signup = () => {
       } else {
         setMessage(response.data.message || "Signup failed. Please try again.");
       }
-    } catch (err) {
-      console.error("Error during signup:", err);
-      setMessage("An error occurred. Please try again later.");
+    } catch (error) {
+      console.error("Error during signup:", error);
+      setMessage(error.response.data.message);
     }
   };
 

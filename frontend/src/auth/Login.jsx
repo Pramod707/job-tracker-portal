@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/api/login', formDetails);
-
+      
       if (response.data.success) {
         setMessage("");
         document.cookie = `token=${response.data.token}`;
@@ -27,7 +27,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error during login:", error);
-      setMessage("An error occurred. Please try again later.");
+      setMessage(error.response.data.message);
     }
   };
 
