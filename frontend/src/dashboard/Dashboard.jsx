@@ -6,7 +6,9 @@ import MyTasks from './MyTasks/MyTasks';
 import Notifications from './Notifications/Notifications';
 import Analytics from './Analytics/Analytics';
 import Preferences from './Preferences/Preferences'
+import Resume from './Resume/Resume'
 import { useSidebar } from '../contexts/SidebarContext';
+import { PrefProvider } from './Preferences/PrefContext';
 
 const Dashboard = () => {
   const { activeTab } = useSidebar();
@@ -24,7 +26,9 @@ const Dashboard = () => {
       case 'analytics':
         return <Analytics />;
       case 'preferences':
-        return <Preferences />;
+        return <PrefProvider><Preferences /></PrefProvider>;
+      case 'resume':
+        return <Resume />
       default:
         return <Home />;
     }

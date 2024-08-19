@@ -36,6 +36,15 @@ const DashBar = () => {
         }
     };
 
+    const handleResumeClick = () => {
+        if (activeTab === 'resume') {
+            setActiveTab(prevTab || 'home');
+        } else {
+            setPrevTab(activeTab);
+            setActiveTab('resume');
+        }
+    };
+
     return (
         <div className='flex flex-row justify-between items-center w-full h-fit'>
             <div className='w-full'>
@@ -70,7 +79,7 @@ const DashBar = () => {
                         disableRipple={true} 
                         isIconOnly={true} 
                         className='flex-shrink-0 bg-transparent text-[#4F7471]' 
-                        onClick={handlePreferencesClick}
+                        onClick={handleResumeClick}
                     >
                         <AssignmentIndIcon draggable={false} />
                     </Button>
