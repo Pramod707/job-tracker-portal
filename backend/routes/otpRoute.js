@@ -1,7 +1,8 @@
 const express = require('express');
-const app = express();
 const { otpVerification } = require('../controllers/otpVerification');
+const auth = require('../services/auth');
+const app = express();
 
-app.post('/', otpVerification);
+app.post('/', auth, otpVerification);
 
-module.exports = app
+module.exports = app;

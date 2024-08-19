@@ -1,16 +1,11 @@
 const User = require('../models/userModel');
-const { getUser } = require('../services/token');
 
 const otpVerification = async (req, res) => {
     try {
         const { otp: userOtp } = req.body;
         const token = req.headers.authorization.split(' ')[1];
-        const payload = getUser(token);
-        if (!payload) {
-            return res.status(401).json({ success: false, message: 'Invalid token' });
-        }
-
-        const user = await User.findOne({ email: payload.email });
+        
+        const user = await User.findOne({ email: req.user });
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }

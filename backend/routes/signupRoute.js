@@ -1,10 +1,11 @@
 const express = require('express');
-const app = express();
-
+const auth = require('../services/auth');
 const { signupUser, addDetails } = require('../controllers/signupController');
 
-app.post('/',signupUser);
+const app = express();
 
-app.post('/add-details', addDetails);
+app.post('/', signupUser);
+
+app.post('/add-details', auth, addDetails);
 
 module.exports = app;

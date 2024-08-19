@@ -10,6 +10,7 @@ const otherInfoSchema = new Schema({
   },
   branch: {
     type: String,
+    enum: ['Computer Science', 'Electronics and Communication', 'Mechanical', 'Civil', 'Electrical', 'Information Technology', 'Computer Science DS', 'Computer Science AI&ML', 'Computer Science IoT'],
     required: true,
     trim: true
   },
@@ -26,7 +27,7 @@ const otherInfoSchema = new Schema({
     trim: true
   },
   techStack: {
-    type: String
+    type: []
   },
   jobs: {
     applied: [{

@@ -5,6 +5,7 @@ function auth(req, res, next) {
     if (token) {
         const payload = getUser(token);
         if (payload.email) {
+            req.user = payload.email;
             next();
         } else {
             res.status(401).json({ success: false, message: 'Unauthorized' });
