@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const otherInfoSchema = new Schema({
+const studentDetailsSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -50,5 +50,5 @@ const otherInfoSchema = new Schema({
   timestamps: true
 });
 
-const studentDetails = mongoose.model('studentDetails', otherInfoSchema);
+const studentDetails = mongoose.model('studentDetails', studentDetailsSchema);
 module.exports = studentDetails;
