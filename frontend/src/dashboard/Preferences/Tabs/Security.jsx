@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox, Input, Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 
 const Security = () => {
   return (

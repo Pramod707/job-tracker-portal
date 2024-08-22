@@ -85,7 +85,7 @@ const DashBar = () => {
                     </Button>
                 </div>
                 
-                <AccountCircleIcon className='bg-[#DCE3E3] border-[#B9C7C6] rounded-full w-[80px] h-[80px] select-none'/>
+                <AccountCircleIcon className='bg-[#DCE3E3] border-[#B9C7C6] text-[#4F7471] rounded-full size-[2rem] select-none'/>
             </div>
         </div>
     );

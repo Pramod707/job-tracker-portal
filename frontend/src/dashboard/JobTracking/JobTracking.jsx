@@ -6,7 +6,9 @@ const JobTracking = () => {
   return (
     <div>
       <ActionBar />
-      <JobsTable />
+      <div className='py-[1rem]'>
+        <JobsTable />
+      </div>
     </div>
   )
 }

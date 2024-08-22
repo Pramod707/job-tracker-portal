@@ -4,6 +4,8 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-o
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const MyForm = () => {
+  const [branch, setBranch] = useState("Branch");
+
   const [formData, setFormData] = useState({
     username: '',
     rollNumber: '',
@@ -76,8 +78,8 @@ const MyForm = () => {
 
         <Dropdown backdrop="blur">
           <DropdownTrigger>
-            <Button variant="faded" className="h-[3.5rem] w-full">
-              Branch<span><ArrowDropDownIcon/></span>
+            <Button variant="faded" className="h-[3.5rem] w-full" >
+              {branch}<span><ArrowDropDownIcon/></span>
             </Button>
           </DropdownTrigger>
           <DropdownMenu 
@@ -87,12 +89,12 @@ const MyForm = () => {
             selectionMode="single"
             onAction={(key) => handleDropdownChange('branch', key)}
           >
-            <DropdownItem key="cse">CSE</DropdownItem>
-            <DropdownItem key="iot">IOT</DropdownItem>
-            <DropdownItem key="csm">CSM</DropdownItem>
-            <DropdownItem key="aids">AIDS</DropdownItem>
-            <DropdownItem key="civil">Civil</DropdownItem>
-            <DropdownItem key="mech">Mechanical</DropdownItem>
+            <DropdownItem key="cse" onClick={() => setBranch('CSE')}>CSE</DropdownItem>
+            <DropdownItem key="iot" onClick={() => setBranch('IOT')}>IOT</DropdownItem>
+            <DropdownItem key="csm" onClick={() => setBranch('CSM')}>CSM</DropdownItem>
+            <DropdownItem key="aids" onClick={() => setBranch('AIDS')}>AIDS</DropdownItem>
+            <DropdownItem key="civil" onClick={() => setBranch('Civil')}>Civil</DropdownItem>
+            <DropdownItem key="mech" onClick={() => setBranch('Mechanical')}>Mechanical</DropdownItem>
           </DropdownMenu>
         </Dropdown>
 
