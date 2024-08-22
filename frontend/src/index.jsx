@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar'; // Import Sidebar
+import Navbar from './Components/Navbar';
+// import Sidebar from './Components/Sidebar'; // Import Sidebar
 import { NextUIProvider } from "@nextui-org/react";
+import Sidebar from './Components/Sidebar'
 import { useLocation } from 'react-router-dom';
 import { SidebarProvider } from './contexts/SidebarContext';
 

@@ -6,8 +6,8 @@ import Login from './auth/Login';
 import ResetPassword from './auth/ResetPassword';
 import Details from './auth/Details';
 import Dashboard from './dashboard/Dashboard';
-import PrivacyAndPolicy from "./components/PrivacyAndPolicy"
-import TermsAndConditions from './components/TermsAndConditions'
+import PrivacyAndPolicy from "./Components/PrivacyAndPolicy"
+import TermsAndConditions from './Components/TermsAndConditions'
 const App = () => {
   const location = useLocation();
 
