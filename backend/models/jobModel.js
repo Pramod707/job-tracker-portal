@@ -5,25 +5,55 @@ const jobSchema = new Schema({
     companyName: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        index: true
     },
-    jobDescription: {
+    jobTitle: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        index: true
     },
-    location: {
-        type: [String],
+    jobDescription: {
+        type: new Schema({
+            responsibility: {
+                type: [String],
+                required: true,
+                trim: true
+            },
+            experience: {
+                type: [String],
+                required: true,
+                trim: true
+            },
+            benefits: {
+                type: [String],
+                trim: true
+            },
+            extraDetails: {
+                type: [String],
+                trim: true
+            }
+        }),
+        required: true
+    },
+    salary: {
+        type: Number,
         required: true,
-        trim: true
+        min: 0,
+        max: 1000000
+    },
+    locations: {
+        type: [String],
+        required: true
     },
     applicationLink: {
         type: String,
         required: true,
         trim: true,
         validate: {
-            validator: function (v) {
-                return /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(v);
+            validator: function(v) {
+                return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
             },
             message: props => `${props.value} is not a valid URL!`
         }
@@ -37,14 +67,9 @@ const jobSchema = new Schema({
         type: Date,
         required: true
     },
-    requiredTechStack: {
+    techStack: {
         type: [String],
-        validate: {
-            validator: function (v) {
-                return v.length > 0;
-            },
-            message: props => `At least one technology stack is required`
-        }
+        default: []
     },
     eligibility: {
         type: String,
@@ -54,13 +79,19 @@ const jobSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ['internship', 'part-time', 'full-time', 'remote'],
-        trim: true
+        enum: ['internship', 'part-time', 'full-time'],
+        default: 'full-time'
+    },
+    remote: {
+        type: String,
+        required: true,
+        enum: ['remote', 'on-site', 'hybrid'],
+        default: 'on-site'
     },
     addedBy: {
         type: String,
         required: true,
-        trim: true
+        enum: ["Admin", "Placements", "You"],
     }
 }, {
     timestamps: true
