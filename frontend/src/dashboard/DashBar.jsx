@@ -45,10 +45,22 @@ const DashBar = () => {
         }
     };
 
+    const pageTitles = {
+        home: 'Home',
+        jobtracking: 'Job Tracking',
+        mytasks: 'My Tasks',
+        notifications: 'Notifications',
+        analytics: 'Analytics',
+        preferences: 'Preferences',
+        resume: 'Resume',
+    };
+
+    const currentTitle = pageTitles[activeTab] || 'Dashboard';
+
     return (
         <div className='flex flex-row justify-between items-center w-full h-fit'>
             <div className='w-full'>
-                <h1 className='text-2xl font-black'>My Tasks</h1>
+                <h1 className='text-2xl font-black'>{currentTitle}</h1>
                 <h3 className='text-[#4F7471]'>Manage all your tasks in one place</h3>
             </div>
             <div className='w-full hidden md:flex flex-row justify-end items-center gap-[2rem]'>
