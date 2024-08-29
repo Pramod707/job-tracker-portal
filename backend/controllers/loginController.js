@@ -1,6 +1,6 @@
 const { emailService } = require('../services/email');
 const { otpGenerator } = require('../services/otp');
-const { setToken, getUser } = require('../services/token');
+const { setToken } = require('../services/token');
 const User = require('../models/userModel');
 
 const loginUser = async (req, res) => {

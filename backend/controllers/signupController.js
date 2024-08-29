@@ -12,7 +12,7 @@ const signupUser = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ message: 'Please enter all the fields' });
+            return res.status(400).json({ message: 'Please enter all the fields', success:false });
         }
 
         const options = {
@@ -25,7 +25,7 @@ const signupUser = async (req, res) => {
 
         const validPassword = validator.isStrongPassword(password, options);
         if (!validPassword) {
-            return res.status(400).json({ message: 'Password is not strong enough' });
+            return res.status(400).json({ message: 'Password is not strong enough', success:false });
         }
 
         const otp = otpGenerator();
