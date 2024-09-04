@@ -1,0 +1,60 @@
+import { NextFunction, Request, Response } from 'express';
+import { emailService } from '../service/email';
+import { otpGenerator } from '../service/otp';
+import { setToken } from '../service/token';
+import User from '../model/userModel';
+import httpError from '../util/httpError';
+import responseMessage from '../constant/responseMessage';
+import httpResponse from '../util/httpResponse';
+
+interface UserDocument {
+  email: string;
+  password: string;
+  otp: string;
+  save: () => Promise<UserDocument>;
+}
+
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      httpError(next, new Error('Please enter all the fields'), req, 400);
+      return;
+    }
+
+    const user = await User.findOne({ email }) as UserDocument | null;
+    if (!user) {
+      httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
+      return;
+    }
+
+    if (password !== user.password) {
+      httpError(next, new Error('Invalid credentials'), req, 400);
+      return;
+    }
+
+    const OTP: string = otpGenerator();
+    user.otp = OTP;
+    await user.save();
+
+    setTimeout(async () => {
+      user.otp = '';
+      await user.save();
+    }, 10000 * 12);
+
+    const token = setToken(user);
+    const resp = await emailService({ email, OTP, username: user.email });
+    if (resp) {
+      httpResponse(req, res, 200, responseMessage.SUCCESS, { token, OTP, success: true });
+    } else {
+      httpError(next, new Error("Failed to send email"), req, 500);
+      return;
+    }
+  } catch (error) {
+    httpError(next, error, req, 500);
+    return;
+  }
+};
+
+export { loginUser };
