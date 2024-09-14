@@ -51,7 +51,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
         setTimeout(async () => {
             await User.deleteOne({ email, verified: false });
             console.log("user deleted successfully");
-            
+
         }, 120000);
 
         const token = setToken(user);
@@ -69,7 +69,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 };
 
 interface UserDocument {
-    _id: string;
+    readonly _id: string;
     name: string;
     phoneNumber: string;
     email: string;
@@ -77,7 +77,7 @@ interface UserDocument {
     otp: string;
     verified: boolean;
     save: () => Promise<UserDocument>;
-  }
+}
 
 const addDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
