@@ -6,7 +6,7 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-
+import PopUp from './PopUp';
 const ActionBar = () => {
   return (
     <div className='border-b-3 border-dotted pb-[1rem] flex flex-row justify-between items-center'>
@@ -92,9 +92,10 @@ const ActionBar = () => {
                 </DropdownMenu>
             </Dropdown>
 
-            <Button className="bg-[#0037FF] text-white font-black">
-                New <span><AddOutlinedIcon /></span>
-            </Button>
+            {/* <Button className="bg-[#0037FF] text-white font-black">
+                New <span><AddOutlinedIcon /></span> */}
+                <PopUp/>
+            {/* </Button> */}
 
             <Dropdown backdrop="blur">
                 <DropdownTrigger className="flex border  rounded-md cursor-pointer">
