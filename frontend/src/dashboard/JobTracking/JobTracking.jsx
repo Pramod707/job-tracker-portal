@@ -6,7 +6,7 @@ const JobTracking = () => {
   const [view, setView] = useState('Table');
   return (
     <div>
-      <ActionBar setView={setView} />
+      <ActionBar view={view} setView={setView} />
       <div className='py-[1rem]'>
         {view === 'Table' && <JobsTable />}
         {view === 'Kanban' && <Kanban />}

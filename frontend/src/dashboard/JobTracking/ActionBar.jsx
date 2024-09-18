@@ -8,26 +8,26 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import PopUp from './PopUp';
 
-const ActionBar = ({ setView }) => {
+const ActionBar = ({ view, setView }) => {
     return (
         <div className='border-b-3 border-dotted pb-[1rem] flex flex-row justify-between items-center'>
             {/* Views */}
             <div className='flex flex-row justify-center items-center gap-[1rem]'>
                 <Button
-                    className="bg-[#DCE3E3] font-black"
+                    className={`bg-[${view === "Table" ? "#DCE3E3" : "#F4F6F6"}] font-black`}
                     onClick={() => setView("Table")}
                 >Table
                 </Button>
 
                 <Button
-                    className="bg-[#F4F6F6] font-black"
+                    className={`bg-[${view === "Kanban" ? "#DCE3E3" : "#F4F6F6"}] font-black`}
                     onClick={() => setView("Kanban")}
                 >Kanban
                 </Button>
 
                 <Button
-                    className="bg-[#F4F6F6] font-black"
-                // onClick={()=>setView("Kanban")}
+                    className={`bg-[${view === "Calendar" ? "#DCE3E3" : "#F4F6F6"}] font-black`}
+                // onClick={()=>setView("Calendar")}
                 >Calendar
                 </Button>
             </div>
