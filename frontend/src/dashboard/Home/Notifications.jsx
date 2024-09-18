@@ -3,7 +3,6 @@ import React from 'react'
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NotificationCard from './NotificationCard';
-import AddIcon from '@mui/icons-material/Add';
 
 const Notifications = () => {
   const NotificationsList = () => {
