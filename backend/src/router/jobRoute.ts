@@ -1,16 +1,18 @@
-import express, { Request, Response } from "express";
-
+import express, { NextFunction, Request, Response } from "express";
 import auth from '../middleware/auth';
 import { createJob } from '../controller/jobController';
 import Job from '../model/jobModel';
+import httpResponse from "../util/httpResponse";
+import responseMessage from "../constant/responseMessage";
+import httpError from "../util/httpError";
 
 const app = express();
 
-app.post('/get-jobs', auth, async (req: Request, res: Response) => {
+app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
         const criteria = req.body;
 
-        const query:Record<string, any> = {};
+        const query: Record<string, any> = {};
 
         if (criteria.companyNames) {
             query.companyName = Array.isArray(criteria.companyNames) ? { $in: criteria.companyNames } : criteria.companyNames;
@@ -45,13 +47,12 @@ app.post('/get-jobs', auth, async (req: Request, res: Response) => {
         }
 
         const jobs = await Job.find(query).exec();
-        res.json(jobs);
+        httpResponse(req, res, 200, responseMessage.SUCCESS, { jobs, success: true })
     } catch (error) {
-        console.error('Error fetching jobs:', error);
-        res.status(500).json({ error: 'An error occurred while fetching jobs.' });
+        httpError(next, error, req, 500);
+        return;
     }
 });
-
 
 app.post('/create-job', auth, createJob);
 
