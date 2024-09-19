@@ -7,6 +7,7 @@ import signupRoute from './router/signupRoute';
 import otpRoute from './router/otpRoute';
 import loginRoute from './router/loginRoute';
 import jobRoute from './router/jobRoute';
+import forgotPasswordRoute from './router/forgotPasswordRoute';
 
 import auth from './middleware/auth';
 import globalErrorHandler from './middleware/globalErrorHandler';
@@ -33,6 +34,7 @@ app.use('/api/signup', signupRoute);
 app.use('/api/otp', otpRoute);
 app.use('/api/login', loginRoute);
 app.use('/api/jobs', jobRoute);
+app.use('/api/auth', forgotPasswordRoute)
 
 //
 app.get('/', auth, (_req: Request, res: Response) => {

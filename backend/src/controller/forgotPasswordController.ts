@@ -34,7 +34,7 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
     }, 10000 * 12);
 
     const token = setToken(user);
-    const resp = await emailService({email, OTP, username: user.email});
+    const resp = await emailService({ email, OTP, username: user.email });
 
     if (resp) {
       return res.status(200).json({ token, OTP, success: true });
@@ -66,7 +66,7 @@ const resetPassword = async (req: Request, res: Response): Promise<Response | vo
     await user.save();
 
     return res.status(200).json({ message: 'Password reset successful', success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in resetPassword:', error);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }

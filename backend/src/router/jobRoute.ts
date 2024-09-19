@@ -10,6 +10,7 @@ const app = express();
 
 app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const { page, rows } = req.query;
         const criteria = req.body;
 
         const query: Record<string, any> = {};
