@@ -10,8 +10,19 @@ const app = express();
 
 app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { page, rows } = req.query;
-        const criteria = req.body;
+        const { page = '1', rows = '10' } = req.query as { page?: string; rows?: string };
+        const criteria = req.body as {
+            companyNames?: string | string[];
+            jobTitles?: string | string[];
+            locations?: string | string[];
+            minSalary?: number;
+            maxSalary?: number;
+            startDate?: string;
+            endDate?: string;
+            techStacks?: string[];
+            types?: string | string[];
+            remotes?: string | string[];
+        };
 
         const query: Record<string, any> = {};
 
@@ -36,7 +47,7 @@ app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFuncti
         }
 
         if (criteria.techStacks) {
-            query.techStack = Array.isArray(criteria.techStacks) ? { $all: criteria.techStacks } : criteria.requiredTechStacks;
+            query.techStack = Array.isArray(criteria.techStacks) ? { $all: criteria.techStacks } : criteria.techStacks;
         }
 
         if (criteria.types) {
@@ -47,13 +58,31 @@ app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFuncti
             query.remote = Array.isArray(criteria.remotes) ? { $in: criteria.remotes } : criteria.remotes;
         }
 
-        const jobs = await Job.find(query).exec();
-        httpResponse(req, res, 200, responseMessage.SUCCESS, { jobs, success: true })
+        const pageNumber = Number(page);
+        const rowsPerPage = Number(rows);
+        const skip = (pageNumber - 1) * rowsPerPage;
+
+        const jobs = await Job.find(query)
+            .skip(skip)
+            .limit(rowsPerPage)
+            .exec();
+
+        const totalJobs = await Job.countDocuments(query);
+
+        const response = {
+            jobs,
+            totalJobs,
+            currentPage: pageNumber,
+            totalPages: Math.ceil(totalJobs / rowsPerPage),
+            success: true
+        };
+
+        httpResponse(req, res, 200, responseMessage.SUCCESS, response);
     } catch (error) {
         httpError(next, error, req, 500);
-        return;
     }
 });
+
 
 app.post('/create-job', auth, createJob);
 
