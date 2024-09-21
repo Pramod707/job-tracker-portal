@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 
 const OTP = () => {
   const [otpArray, setOtpArray] = useState(Array(4).fill(""));
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e, index) => {
     const { value } = e.target;
@@ -44,10 +46,8 @@ const OTP = () => {
 
     if (otp.length === 4 && /^[0-9]{4}$/.test(otp)) {
       try {
-        const token = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('token='))
-          ?.split('=')[1];
+        const token = Cookies.get('token');
+        console.log("token", token);
 
         const response = await axios.post(
           "http://localhost:3001/api/otp",
@@ -61,7 +61,11 @@ const OTP = () => {
 
         if (response.data.success) {
           setMessage("");
-          navigate('/signup/add-details');
+          if (location.state?.from === 'signup') {
+            navigate('/signup/add-details');
+          } else {
+            navigate('/');
+          }
         } else {
           setMessage(response.data.message || "Invalid OTP. Please try again.");
         }

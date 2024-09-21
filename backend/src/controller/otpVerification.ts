@@ -4,17 +4,14 @@ import httpError from '../util/httpError';
 import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
 
-interface UserDocument {
-  email: string;
-  otp: string;
-  verified: boolean;
-  save: () => Promise<UserDocument>;
+interface CustomRequest extends Request {
+  user?: string
 }
 
-const otpVerification = async (req: Request, res: Response, next: NextFunction) => {
+const otpVerification = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { otp: userOtp } = req.body;
-    const user = await User.findOne({ email: req.user }) as UserDocument | null;
+    const user = await User.findOne({ email: req.user });
 
     if (!user) {
       httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);

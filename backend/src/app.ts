@@ -13,6 +13,7 @@ import auth from './middleware/auth';
 import globalErrorHandler from './middleware/globalErrorHandler';
 import httpError from './util/httpError';
 import responseMessage from './constant/responseMessage';
+import httpResponse from './util/httpResponse';
 
 const app = express();
 
@@ -35,6 +36,10 @@ app.use('/api/otp', otpRoute);
 app.use('/api/login', loginRoute);
 app.use('/api/jobs', jobRoute);
 app.use('/api/auth', forgotPasswordRoute)
+
+app.post('/api/verify', auth, (req, res) => {
+    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true });
+})
 
 //
 app.get('/', auth, (_req: Request, res: Response) => {

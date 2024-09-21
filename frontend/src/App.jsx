@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import OtpInput from './auth/OTP';
 import Signup from './auth/Signup';
 import Login from './auth/Login';
@@ -8,16 +8,34 @@ import Details from './auth/Details';
 import Dashboard from './dashboard/Dashboard';
 import PrivacyAndPolicy from "./Components/PrivacyAndPolicy"
 import TermsAndConditions from './Components/TermsAndConditions'
+import RefreshHandler from './auth/RefreshHandler';
+
 const App = () => {
-  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const PrivateRoute = ({ element, auth }) => {
+    return auth ? element : <Navigate to="/login" />;
+  }
 
-  // Check if the current route is '/'
-  const isDashboardRoute = location.pathname === '/';
+  const handleIsAuthenticated = () => {
+    setIsAuthenticated(prev => !prev);
+  }
 
-  return (      
+  useEffect(() => {
+    console.log("isAuthenticated", isAuthenticated);
+  }, [isAuthenticated]);
+
+  return (
     <div className={`h-screen w-full flex flex-col justify-center items-center`}>
+      <RefreshHandler handleIsAuthenticated={handleIsAuthenticated} />
+
       <Routes>
-        <Route path='/' element={isDashboardRoute ? <Dashboard /> : <></>} />
+        <Route path='/' element={
+          <PrivateRoute auth={isAuthenticated} element={
+            <Dashboard />
+          }
+          />
+        } />
+
         <Route path='/signup' element={<Signup />} />
         <Route path='/signup/add-details' element={<Details />} />
         <Route path='/login' element={<Login />} />

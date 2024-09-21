@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 
 const Login = () => {
   const [formDetails, setFormDetails] = useState({
@@ -16,11 +17,12 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/api/login', formDetails);
-      
+
       if (response.data.success) {
         setMessage("");
-        document.cookie = `token=${response.data.token}`;
-        navigate('/otp');
+        
+        Cookies.set('token', response.data.data.token, { expires: 7 });
+        navigate('/otp', { state: { from: 'login' } });
         setFormDetails({ email: "", password: "" });
       } else {
         setMessage(response.data.message || "Login failed. Please try again.");

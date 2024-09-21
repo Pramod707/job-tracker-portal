@@ -25,7 +25,7 @@ const Signup = () => {
       if (response.data.success) {
         setMessage("");
         document.cookie = `token=${response.data.token}`;
-        navigate('/otp');
+        navigate('/otp', { state: { from: 'signup' } });
         setFormDetails({ email: "", password: "" });
       } else {
         setMessage(response.data.message || "Signup failed. Please try again.");

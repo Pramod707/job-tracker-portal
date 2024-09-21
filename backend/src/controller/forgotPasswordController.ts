@@ -4,14 +4,11 @@ import { otpGenerator } from '../service/otp';
 import { setToken } from '../service/token';
 import { emailService } from '../service/email';
 
-interface UserDocument {
-  email: string;
-  password: string;
-  otp: string;
-  save: () => Promise<UserDocument>;
+interface CustomRequest extends Request {
+  user?: string
 }
 
-const forgotPassword = async (req: Request, res: Response): Promise<Response | void> => {
+const forgotPassword = async (req: CustomRequest, res: Response): Promise<Response | void> => {
   try {
     const { email } = req.body;
 
@@ -19,7 +16,7 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
       return res.status(400).json({ message: 'Email is required', success: false });
     }
 
-    const user = await User.findOne({ email }) as UserDocument | null;
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found', success: false });
     }
@@ -47,7 +44,7 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
   }
 };
 
-const resetPassword = async (req: Request, res: Response): Promise<Response | void> => {
+const resetPassword = async (req: CustomRequest, res: Response): Promise<Response | void> => {
   try {
     const { password } = req.body;
 
@@ -56,7 +53,7 @@ const resetPassword = async (req: Request, res: Response): Promise<Response | vo
     }
 
     const email = req.user as string;
-    const user = await User.findOne({ email }) as UserDocument | null;
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found', success: false });

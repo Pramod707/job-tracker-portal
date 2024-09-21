@@ -16,6 +16,10 @@ interface SignupRequest extends Request {
     };
 }
 
+interface CustomRequest extends Request {
+    user?: string
+}
+
 const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 ) => {
     try {
@@ -68,21 +72,10 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
     }
 };
 
-interface UserDocument {
-    readonly _id: string;
-    name: string;
-    phoneNumber: string;
-    email: string;
-    securityQuestions?: Array<{ question: string; answer: string }>;
-    otp: string;
-    verified: boolean;
-    save: () => Promise<UserDocument>;
-}
-
-const addDetails = async (req: Request, res: Response, next: NextFunction) => {
+const addDetails = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
-        const user = await User.findOne({ email: req.user }) as UserDocument | null;
+        const user = await User.findOne({ email: req.user });
 
         if (!user) {
             httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
