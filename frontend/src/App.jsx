@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import OtpInput from './auth/OTP';
 import Signup from './auth/Signup';
@@ -19,10 +19,6 @@ const App = () => {
   const handleIsAuthenticated = () => {
     setIsAuthenticated(prev => !prev);
   }
-
-  useEffect(() => {
-    console.log("isAuthenticated", isAuthenticated);
-  }, [isAuthenticated]);
 
   return (
     <div className={`h-screen w-full flex flex-col justify-center items-center`}>
