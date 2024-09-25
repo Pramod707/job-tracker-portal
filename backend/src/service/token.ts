@@ -27,8 +27,8 @@ const getUser = (token: string): TokenPayload | null => {
     try {
         if (!token) return null;
         return jwt.verify(token, config.JWT_SECRET!) as TokenPayload;
-    } catch (err) {
-        console.error(err);
+    } catch (error: Error | any) {
+        console.log(error.message);
         return null;
     }
 };
