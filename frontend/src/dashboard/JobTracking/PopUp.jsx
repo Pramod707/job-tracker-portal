@@ -16,6 +16,7 @@ import {
 } from "@nextui-org/react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { color } from "framer-motion";
 
 export default function PopUp() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -37,41 +38,50 @@ export default function PopUp() {
     addedBy: "Admin",
   });
 
-  // State to manage postedDate and dueDate separately
   const [postedDate, setPostedDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(new Date());
+  // const [isFullScreen, setIsFullScreen] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  // const toggleFullScreen = () => {
+  //   setIsFullScreen(!isFullScreen);
+  // };
 
   return (
     <>
       <Button onPress={onOpen} color="default" variant="ghost">
         New <AddOutlinedIcon />
       </Button>
-
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        placement="top-center"
+        // placement="top-center"
+        backdrop={"blur"}
         scrollBehavior="inside"
-        size="md"
+        // size={isFullScreen ? "full" : "2xl"}
+        size="2xl"
       >
         <ModalContent >
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                <Button className="bg-[#FFFFFF] border">
+              <ModalHeader className="flex justify-between">
+                <Button
+                  className="bg-[#FFFFFF] border font-sans hover:font-mono font-bold"
+                  // onPress={toggleFullScreen} 
+                >
                   <OpenInNewIcon />
-                  Open Full Screen
+                  {/* {isFullScreen ? "Exit Full Screen" : "Open Full Screen"}
+                   */}
+                   Open Full Screen
                 </Button>
               </ModalHeader>
-              <ModalBody style={{ maxHeight: "400px", overflowY: "auto" }}>
-                <div className="bg-[#FFFFFF] rounded-lg">
-                  <Spacer y={0.5} />
+              <ModalBody className="font-mono font-bold" >
+                {/* <div className="bg-[#FFFFFF] rounded-lg"> */}
+                  {/* <Spacer y={0.5} /> */}
 
                   <Input
                     label="Company Name"
@@ -79,10 +89,14 @@ export default function PopUp() {
                     placeholder="Enter company name"
                     onChange={handleChange}
                     value={formData.companyName}
-                    fullWidth
+                    // fullWidth
+                    // variant="faded"
+                    labelPlacement="outside"
                     required
+                    variant="faded"
+                    // className="font-mono" 
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Job Title"
@@ -92,8 +106,11 @@ export default function PopUp() {
                     value={formData.jobTitle}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
+                    
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Textarea
                     label="Responsibilities"
@@ -103,8 +120,10 @@ export default function PopUp() {
                     value={formData.responsibility}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Textarea
                     label="Experience"
@@ -114,8 +133,10 @@ export default function PopUp() {
                     value={formData.experience}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1}/>
+                  {/* <Spacer y={1}/> */}
 
                   <Textarea
                     label="Benefits"
@@ -124,8 +145,10 @@ export default function PopUp() {
                     onChange={handleChange}
                     value={formData.benefits}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Textarea
                     label="Extra Details"
@@ -134,8 +157,10 @@ export default function PopUp() {
                     onChange={handleChange}
                     value={formData.extraDetails}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Salary"
@@ -146,8 +171,10 @@ export default function PopUp() {
                     value={formData.salary}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Locations"
@@ -157,8 +184,10 @@ export default function PopUp() {
                     value={formData.locations}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Application Link"
@@ -168,8 +197,10 @@ export default function PopUp() {
                     value={formData.applicationLink}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   {/* Posted Date */}
                   <DatePicker
@@ -178,8 +209,10 @@ export default function PopUp() {
                     // value={postedDate}
                     // onChange={(date) => setPostedDate(date)}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   {/* Due Date */}
                   <DatePicker
@@ -188,8 +221,10 @@ export default function PopUp() {
                     // value={dueDate}
                     // onChange={(date) => setDueDate(date)}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Tech Stack"
@@ -198,8 +233,10 @@ export default function PopUp() {
                     onChange={handleChange}
                     value={formData.techStack}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Input
                     label="Eligibility"
@@ -209,8 +246,10 @@ export default function PopUp() {
                     value={formData.eligibility}
                     fullWidth
                     required
+                    variant="faded"
+                    labelPlacement="outside"
                   />
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Select
                     label="Job Type"
@@ -218,12 +257,14 @@ export default function PopUp() {
                     value={formData.type}
                     onChange={(value) => setFormData({ ...formData, type: value })}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   >
                     <SelectItem value="internship">Internship</SelectItem>
                     <SelectItem value="part-time">Part-Time</SelectItem>
                     <SelectItem value="full-time">Full-Time</SelectItem>
                   </Select>
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Select
                     label="Remote/On-Site"
@@ -231,12 +272,14 @@ export default function PopUp() {
                     value={formData.remote}
                     onChange={(value) => setFormData({ ...formData, remote: value })}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   >
                     <SelectItem value="remote">Remote</SelectItem>
                     <SelectItem value="on-site">On-Site</SelectItem>
                     <SelectItem value="hybrid">Hybrid</SelectItem>
                   </Select>
-                  <Spacer y={1} />
+                  {/* <Spacer y={1} /> */}
 
                   <Select
                     label="Added By"
@@ -244,18 +287,20 @@ export default function PopUp() {
                     value={formData.addedBy}
                     onChange={(value) => setFormData({ ...formData, addedBy: value })}
                     fullWidth
+                    variant="faded"
+                    labelPlacement="outside"
                   >
                     <SelectItem value="Admin">Admin</SelectItem>
                     <SelectItem value="Placements">Placements</SelectItem>
                     <SelectItem value="You">You</SelectItem>
                   </Select>
-                </div>
+                {/* </div> */}
               </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
+              <ModalFooter >
+                <Button className="font-bold" color="danger" variant="flat" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="success" variant="flat" onPress={onClose}>
+                <Button className="font-bold" color="success" variant="flat" onPress={onClose} >
                   Submit
                 </Button>
               </ModalFooter>
