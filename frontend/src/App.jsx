@@ -11,7 +11,7 @@ import TermsAndConditions from './Components/TermsAndConditions'
 import RefreshHandler from './auth/RefreshHandler';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const PrivateRoute = ({ element, auth }) => {
     return auth ? element : <Navigate to="/login" />;
   }
