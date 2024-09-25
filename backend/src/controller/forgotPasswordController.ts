@@ -2,13 +2,9 @@ import { Request, Response } from 'express';
 import User from '../model/userModel';
 import { otpGenerator } from '../service/otp';
 import { setToken } from '../service/token';
-import { emailService } from '../service/email';
+import { sendVerificationEmail } from '../service/email';
 
-interface CustomRequest extends Request {
-  user?: string
-}
-
-const forgotPassword = async (req: CustomRequest, res: Response): Promise<Response | void> => {
+const forgotPassword = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const { email } = req.body;
 
@@ -31,7 +27,7 @@ const forgotPassword = async (req: CustomRequest, res: Response): Promise<Respon
     }, 10000 * 12);
 
     const token = setToken(user);
-    const resp = await emailService({ email, OTP, username: user.email });
+    const resp = await sendVerificationEmail({ email, OTP, username: user.email});
 
     if (resp) {
       return res.status(200).json({ token, OTP, success: true });
@@ -44,7 +40,7 @@ const forgotPassword = async (req: CustomRequest, res: Response): Promise<Respon
   }
 };
 
-const resetPassword = async (req: CustomRequest, res: Response): Promise<Response | void> => {
+const resetPassword = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const { password } = req.body;
 

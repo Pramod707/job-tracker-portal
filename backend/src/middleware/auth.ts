@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
 import { getUser } from '../service/token';
+import { getCookie } from '../util/cookie'
 
-interface CustomRequest extends Request {
-    user?: string
-}
-
-function auth(req: CustomRequest, res: Response, next: NextFunction) {
-    const token = req.headers.authorization?.split(' ')[1];
+function auth(req: Request, res: Response, next: NextFunction) {
+    const token = getCookie(req, 'token');
+    
     if (token) {
         const payload = getUser(token);
         if (payload?.email!) {

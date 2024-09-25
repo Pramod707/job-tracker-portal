@@ -1,23 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import validator from 'validator';
-import { emailService } from '../service/email';
+import { sendVerificationEmail } from '../service/email';
 import { otpGenerator } from '../service/otp';
-import { setToken } from '../service/token';
 import User from '../model/userModel';
 import UserInfo from '../model/studentDetailsModel';
 import httpError from '../util/httpError';
 import httpResponse from '../util/httpResponse';
 import responseMessage from '../constant/responseMessage';
+import { setToken } from '../service/token';
+import { setCookie } from '../util/cookie';
 
 interface SignupRequest extends Request {
     body: {
         email: string;
         password: string;
     };
-}
-
-interface CustomRequest extends Request {
-    user?: string
 }
 
 const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
@@ -50,18 +47,21 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
             email,
             password,
             otp: OTP,
+            OtpExpiresAt: Date.now() + 2 * 60 * 1000,
         });
 
         setTimeout(async () => {
             await User.deleteOne({ email, verified: false });
-            console.log("user deleted successfully");
-
-        }, 120000);
+        }, 2 * 60 * 1000);
 
         const token = setToken(user);
-        const resp = await emailService({ email, OTP, username: user.email });
+        setCookie(res,'token', token);
+        const resp = await sendVerificationEmail({ email, OTP, username: user.email});
         if (resp) {
-            httpResponse(req, res, 200, responseMessage.SUCCESS, { token, OTP, success: true });
+            httpResponse(req, res, 201, responseMessage.SUCCESS, {
+                token,
+                success: true
+            });
         } else {
             httpError(next, new Error("Failed to send email"), req, 500);
             return;
@@ -72,7 +72,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
     }
 };
 
-const addDetails = async (req: CustomRequest, res: Response, next: NextFunction) => {
+const addDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
         const user = await User.findOne({ email: req.user });

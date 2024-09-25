@@ -1,9 +1,9 @@
 import { Request } from 'express';
+import 'express'
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: string;
-        }
+declare module 'express' {
+    export interface Request {
+        cookies: { [key: string]: string };
+        user?: string;
     }
 }

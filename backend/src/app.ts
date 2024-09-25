@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import config from './config/config';
+import cookieParser from 'cookie-parser';
 
 import signupRoute from './router/signupRoute';
 import otpRoute from './router/otpRoute';
@@ -29,6 +30,7 @@ mongoose.connect(mongoURI!)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cookieParser())
 
 // Routes
 app.use('/api/signup', signupRoute);

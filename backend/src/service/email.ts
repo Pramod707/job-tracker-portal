@@ -1,34 +1,40 @@
 import nodemailer from 'nodemailer';
+import { VERIFICATION, WELCOME, RESET_PASSWORD, FORGOT_PASSWORD } from '../util/emailTemplate';
 
-// Define the type for the emailService function's parameters
 interface EmailServiceOptions {
     email: string;
     OTP: string;
     username: string;
 }
+interface WelcomeEmailServiceOptions {
+    email: string;
+    username: string;
+}
 
-async function emailService({ email, OTP, username }: EmailServiceOptions): Promise<boolean> {
-    const transporter = nodemailer.createTransport({
+async function createTransporter() {
+    return nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'tarun.jgs@gmail.com',
-            pass: 'vnsa lwrh rfgl ywsg'
+            user: process.env.EMAIL_ID,
+            pass: process.env.EMAIL_APP_PASSWORD
         },
     });
+}
 
+async function sendEmail(email: string, subject: string, html: string): Promise<boolean> {
+    const transporter = await createTransporter();
     const mailOptions = {
         from: {
             name: 'Job Tracker Portal',
             address: 'tarun.jgs@gmail.com',
         },
         to: email,
-        subject: 'Confirm your OTP for Job Tracker Portal',
-        text: `Hey ${username}! Here is your OTP: ${OTP}`,
+        subject,
+        html,
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
         return true;
     } catch (error) {
         console.error('Error sending email:', error);
@@ -36,4 +42,28 @@ async function emailService({ email, OTP, username }: EmailServiceOptions): Prom
     }
 }
 
-export { emailService };
+async function sendVerificationEmail({ email, OTP, username }: EmailServiceOptions): Promise<boolean> {
+    const subject = 'Job Tracker Portal - Verification';
+    const html = VERIFICATION.replace('{OTP}', OTP).replace('{username}', username);
+    return await sendEmail(email, subject, html);
+}
+
+async function sendWelcomeEmail({ email, username }: WelcomeEmailServiceOptions): Promise<boolean> {
+    const subject = 'Job Tracker Portal - Welcome';
+    const html = WELCOME.replace('{username}', username);
+    return await sendEmail(email, subject, html);
+}
+
+async function sendResetPasswordEmail({ email, OTP, username }: EmailServiceOptions): Promise<boolean> {
+    const subject = 'Job Tracker Portal - Reset Password';
+    const html = RESET_PASSWORD.replace('{OTP}', OTP || '').replace('{username}', username);
+    return await sendEmail(email, subject, html);
+}
+
+async function sendForgotPasswordEmail({ email, OTP, username }: EmailServiceOptions): Promise<boolean> {
+    const subject = 'Job Tracker Portal - Forgot Password';
+    const html = FORGOT_PASSWORD.replace('{OTP}', OTP || '').replace('{username}', username);
+    return await sendEmail(email, subject, html);
+}
+
+export { sendVerificationEmail, sendWelcomeEmail, sendResetPasswordEmail, sendForgotPasswordEmail };

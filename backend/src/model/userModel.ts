@@ -1,17 +1,5 @@
 import mongoose, { Document, Schema, Model, model } from 'mongoose';
-
-interface IUser extends Document {
-    name?: string;
-    email: string;
-    phoneNumber?: string;
-    password: string;
-    securityQuestions?: Array<{ question: string; answer: string }>;
-    studentDetails?: mongoose.Types.ObjectId;
-    otp: string;
-    verified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { IUser } from '../types/types';
 
 const UserSchema: Schema<IUser> = new Schema<IUser>({
     name: {
@@ -58,6 +46,9 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
         type: Boolean,
         default: false,
     },
+    OtpExpiresAt: Date,
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
 }, {
     timestamps: true,
 });
