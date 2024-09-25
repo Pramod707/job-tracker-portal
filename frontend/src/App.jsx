@@ -22,7 +22,7 @@ const App = () => {
 
   return (
     <div className={`h-screen w-full flex flex-col justify-center items-center`}>
-      <RefreshHandler handleIsAuthenticated={handleIsAuthenticated} />
+      {/* <RefreshHandler handleIsAuthenticated={handleIsAuthenticated} /> */}
 
       <Routes>
         <Route path='/' element={
