@@ -112,6 +112,7 @@ const columns = [
 function JobsTable() {
   return (
     <DataTable
+    
       columns={columns}
       data={data}
       customStyles={{
