@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useAuthStore } from '../store/authStore';
+import { useNavigate } from 'react-router-dom';
 
 const MyForm = () => {
   const [branch, setBranch] = useState("Branch");
-
-  const [formData, setFormData] = useState({
+  const [message, setMessage] = useState("");
+  const { isLoading, error, addDetails } = useAuthStore();
+  const navigate = useNavigate();
+  const initialFormState = {
     username: '',
+    phoneNumber: '',
     rollNumber: '',
-    phone: '',
-    branch: '',
-    techStack: '',
     securityQuestions: [],
-    interests: [],
-  });
+    branch: '',
+    joiningYear: '',
+    interests: '',
+    techStack: [String],
+  }
+  const [formData, setFormData] = useState(initialFormState);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,11 +37,18 @@ const MyForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    alert('Form submitted successfully!');
+    try {
+      await addDetails(formData);
+      setMessage('');
+      setFormData(initialFormState)
+      navigate('/');
+    } catch (err) {
+      console.log("Error during add-details", err);
+      setMessage(error);
+    }
+
   };
 
   return (
@@ -43,7 +56,7 @@ const MyForm = () => {
       <div className='flex flex-col justify-center items-center gap-[1rem] max-w-[80%] text-center border-b py-[2rem] border-dotted border-[#adadad]'>
         <h1 className='text-2xl font-bold'>Define Your Goals: Let's Capture What You Want to Achieve!</h1>
       </div>
-
+      {message && <p className="text-red-500">{message}</p>}
       <form onSubmit={handleSubmit} className='w-full grid gap-[1rem] grid-cols-2'>
         <Input
           isRequired
@@ -72,17 +85,17 @@ const MyForm = () => {
           placeholder='9876543210'
           className="w-full"
           name="phone"
-          value={formData.phone}
+          value={formData.phoneNumber}
           onChange={handleInputChange}
         />
 
         <Dropdown backdrop="blur">
           <DropdownTrigger>
             <Button variant="faded" className="h-[3.5rem] w-full" >
-              {branch}<span><ArrowDropDownIcon/></span>
+              {branch}<span><ArrowDropDownIcon /></span>
             </Button>
           </DropdownTrigger>
-          <DropdownMenu 
+          <DropdownMenu
             aria-label="Select your Branch"
             closeOnSelect={false}
             disallowEmptySelection
@@ -101,10 +114,10 @@ const MyForm = () => {
         <Dropdown backdrop="blur">
           <DropdownTrigger>
             <Button variant="faded" className="h-[3.5rem] w-full">
-              Tech Stack<span><ArrowDropDownIcon/></span>
+              Tech Stack<span><ArrowDropDownIcon /></span>
             </Button>
           </DropdownTrigger>
-          <DropdownMenu 
+          <DropdownMenu
             aria-label="Select your Tech Stack"
             closeOnSelect={false}
             disallowEmptySelection
@@ -123,10 +136,10 @@ const MyForm = () => {
         <Dropdown backdrop="blur">
           <DropdownTrigger>
             <Button variant="faded" className="h-[3.5rem] w-full">
-              Security Questions<span><ArrowDropDownIcon/></span>
+              Security Questions<span><ArrowDropDownIcon /></span>
             </Button>
           </DropdownTrigger>
-          <DropdownMenu 
+          <DropdownMenu
             aria-label="Security Questions"
             closeOnSelect={false}
             disallowEmptySelection
@@ -154,10 +167,10 @@ const MyForm = () => {
         <Dropdown backdrop="blur">
           <DropdownTrigger>
             <Button variant="faded" className="h-[3.5rem] w-full">
-              Interests<span><ArrowDropDownIcon/></span>
+              Interests<span><ArrowDropDownIcon /></span>
             </Button>
           </DropdownTrigger>
-          <DropdownMenu 
+          <DropdownMenu
             aria-label="Select your Interests"
             closeOnSelect={false}
             disallowEmptySelection
@@ -172,6 +185,7 @@ const MyForm = () => {
         {/* Submit Button */}
         <div className="col-span-2">
           <Button
+            disabled={isLoading}
             type="submit"
             className='text-white border-2 border-[#0037FF32] bg-[#0037FF] shadow-md w-full'
           >

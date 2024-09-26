@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { Button } from '@nextui-org/react';
-import Cookies from 'js-cookie';
+import { useAuthStore } from '../store/authStore';
 
 const OTP = () => {
   const [otpArray, setOtpArray] = useState(Array(4).fill(""));
   const [message, setMessage] = useState("");
+
+  const { error, isLoading, verifyOTP } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -41,37 +42,25 @@ const OTP = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const otp = otpArray.join("");
 
     if (otp.length === 4 && /^[0-9]{4}$/.test(otp)) {
       try {
-        const token = Cookies.get('token');
-        console.log("token", token);
+        const data = await verifyOTP(otp);
+        console.log(data);
 
-        const response = await axios.post(
-          "http://localhost:3001/api/otp",
-          { otp },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        setMessage("");
 
-        if (response.data.success) {
-          setMessage("");
-          if (location.state?.from === 'signup') {
-            navigate('/signup/add-details');
-          } else {
-            navigate('/');
-          }
+        if (location.state?.from === 'signup' || !data.data.user.verified) {
+          navigate('/signup/add-details');
         } else {
-          setMessage(response.data.message || "Invalid OTP. Please try again.");
+          navigate('/');
         }
-      } catch (error) {
-        console.error("Error during OTP submission:", error);
-        setMessage("An error occurred. Please try again later.");
+      } catch (err) {
+        console.error("Error during OTP submission:", err);
+        setMessage(error);
       }
     } else {
       setMessage("Please enter a valid 4-digit OTP.");
@@ -100,6 +89,7 @@ const OTP = () => {
       <Button
         className='text-white bg-gradient-to-b from-[#0037FF] to-[#002DD1] border-2 font-semibold'
         onClick={handleSubmit}
+        disabled={isLoading}
       >
         Verify OTP
       </Button>

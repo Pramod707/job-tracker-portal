@@ -7,14 +7,8 @@ import httpError from '../util/httpError';
 import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
 import { setCookie } from '../util/cookie';
-
-interface UserDocument {
-  email: string;
-  password: string;
-  otp: string|undefined;
-  OtpExpiresAt: Date;
-  save: () => Promise<UserDocument>;
-}
+import { Document } from 'mongoose';
+import { IUser } from '../types/types';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -25,7 +19,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    const user = await User.findOne({ email }) as UserDocument | null;
+    const user = await User.findOne({ email });
     if (!user) {
       httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
       return;
@@ -46,11 +40,19 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       await user.save();
     }, 2 * 60 * 1000);
 
-    const token = setToken(user);
-    setCookie(res, 'token', token);
+    const token = setToken(user.email, user.verified, user.name);
+    setCookie(res, token);
     const resp = await sendVerificationEmail({ email, OTP, username: user.email });
     if (resp) {
-      httpResponse(req, res, 200, responseMessage.SUCCESS, { token, success: true });
+      httpResponse(req, res, 200, responseMessage.SUCCESS, {
+        user: {
+          email: user.email,
+          verified: user.verified,
+          name: user.name
+        },
+        token,
+        success: true
+      });
     } else {
       httpError(next, new Error("Failed to send email"), req, 500);
       return;

@@ -6,6 +6,10 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
         type: String,
         trim: true,
     },
+    rollNumber:{
+        type:String,
+        trim:true
+    },
     email: {
         type: String,
         required: true,

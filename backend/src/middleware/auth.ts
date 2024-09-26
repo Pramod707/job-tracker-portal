@@ -4,12 +4,12 @@ import { getUser } from '../service/token';
 import { getCookie } from '../util/cookie'
 
 function auth(req: Request, res: Response, next: NextFunction) {
-    const token = getCookie(req, 'token');
-    
+    const token = getCookie(req);
+
     if (token) {
         const payload = getUser(token);
-        if (payload?.email!) {
-            req.user = payload.email;
+        if (payload) {
+            req.user = payload;
             next();
         } else {
             res.status(401).json({ success: false, message: 'Unauthorized' });

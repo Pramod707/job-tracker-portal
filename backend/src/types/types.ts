@@ -28,6 +28,7 @@ export type THttpError = {
 export interface IUser extends Document {
     name?: string;
     email: string;
+    rollNumber:string;
     phoneNumber?: string;
     password: string;
     securityQuestions?: Array<{ question: string; answer: string }>;

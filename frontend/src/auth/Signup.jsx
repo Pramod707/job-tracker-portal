@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 
 const Signup = () => {
   const [formDetails, setFormDetails] = useState({
     email: "",
     password: ""
   });
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const { signup, error, isLoading } = useAuthStore();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -20,19 +21,13 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/signup', formDetails);
-
-      if (response.data.success) {
-        setMessage("");
-        document.cookie = `token=${response.data.token}`;
-        navigate('/otp', { state: { from: 'signup' } });
-        setFormDetails({ email: "", password: "" });
-      } else {
-        setMessage(response.data.message || "Signup failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error during signup:", error);
-      setMessage(error.response.data.message);
+      await signup(formDetails.email, formDetails.password);
+      navigate('/otp', { state: { from: 'signup' } });
+      setFormDetails({ email: "", password: "" });
+      setMessage("");
+    } catch (err) {
+      console.error("Error during signup:", err);
+      setMessage(error);
     }
   };
 
@@ -70,6 +65,7 @@ const Signup = () => {
 
         <Button
           type="submit"
+          disabled={isLoading}
           className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
         >
           Send OTP

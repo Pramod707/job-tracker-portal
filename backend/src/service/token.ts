@@ -1,20 +1,16 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
 
-// Define the type for the User object
-interface User {
-    email: string;
-}
-
-// Define the type for the token payload
 interface TokenPayload {
     email: string;
+    verified: boolean;
+    name: string | undefined
 }
 
 // Function to set token
-const setToken = (user: User): string | null => {
+const setToken = (email: string, verified: boolean, name: string | undefined): string | null => {
     try {
-        const token = jwt.sign({ email: user.email }, config.JWT_SECRET!, { expiresIn: '7d' });
+        const token = jwt.sign({ email, verified, name }, config.JWT_SECRET!, { expiresIn: '7d' });
         return token;
     } catch (err) {
         console.error(err);

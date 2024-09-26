@@ -26,8 +26,8 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
       await user.save();
     }, 10000 * 12);
 
-    const token = setToken(user);
-    const resp = await sendVerificationEmail({ email, OTP, username: user.email});
+    const token = setToken(user.email, user.verified, user.name);
+    const resp = await sendVerificationEmail({ email, OTP, username: user.email });
 
     if (resp) {
       return res.status(200).json({ token, OTP, success: true });
@@ -48,7 +48,7 @@ const resetPassword = async (req: Request, res: Response): Promise<Response | vo
       return res.status(400).json({ message: 'Please enter all the fields', success: false });
     }
 
-    const email = req.user as string;
+    const email = req.user?.email as string;
     const user = await User.findOne({ email });
 
     if (!user) {

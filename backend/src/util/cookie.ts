@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-export const setCookie = (res: Response, cookieName: string, token: string | null) => {
-    res.cookie(cookieName, token, {
+export const setCookie = (res: Response, token: string | null) => {
+    res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.ENV === "production",
         sameSite: "strict",
@@ -9,6 +9,6 @@ export const setCookie = (res: Response, cookieName: string, token: string | nul
     });
 }
 
-export const getCookie = (req: Request, cookieName: string): string | undefined => {
-    return req.cookies?.[cookieName];  // returns the value of the cookie or undefined if not found
+export const getCookie = (req: Request): string | undefined => {
+    return req.cookies.token;  // returns the value of the cookie or undefined if not found
 }

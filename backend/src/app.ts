@@ -9,6 +9,7 @@ import otpRoute from './router/otpRoute';
 import loginRoute from './router/loginRoute';
 import jobRoute from './router/jobRoute';
 import forgotPasswordRoute from './router/forgotPasswordRoute';
+import logoutRoute from './router/logoutRoute';
 
 import auth from './middleware/auth';
 import globalErrorHandler from './middleware/globalErrorHandler';
@@ -37,10 +38,14 @@ app.use('/api/signup', signupRoute);
 app.use('/api/otp', otpRoute);
 app.use('/api/login', loginRoute);
 app.use('/api/jobs', jobRoute);
-app.use('/api/auth', forgotPasswordRoute)
+app.use('/api/auth', forgotPasswordRoute);
+app.use('/api/logout', logoutRoute);
 
-app.post('/api/verify', auth, (req, res) => {
-    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true });
+app.post('/api/verify', auth, (req: Request, res: Response) => {
+    httpResponse(req, res, 200, responseMessage.SUCCESS, {
+        user: req.user,
+        success: true
+    });
 })
 
 //

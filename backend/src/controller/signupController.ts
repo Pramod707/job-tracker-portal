@@ -48,17 +48,23 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
             password,
             otp: OTP,
             OtpExpiresAt: Date.now() + 2 * 60 * 1000,
+            verified: false
         });
 
         setTimeout(async () => {
             await User.deleteOne({ email, verified: false });
         }, 2 * 60 * 1000);
 
-        const token = setToken(user);
-        setCookie(res,'token', token);
-        const resp = await sendVerificationEmail({ email, OTP, username: user.email});
+        const token = setToken(user.email, user.verified, user.name);
+        setCookie(res, token);
+        const resp = await sendVerificationEmail({ email, OTP, username: user.email });
         if (resp) {
             httpResponse(req, res, 201, responseMessage.SUCCESS, {
+                user: {
+                    email: user.email,
+                    verified: user.verified,
+                    name: user.name
+                },
                 token,
                 success: true
             });
@@ -74,8 +80,8 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 
 const addDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { username, phoneNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
-        const user = await User.findOne({ email: req.user });
+        const { username, phoneNumber, rollNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
+        const user = await User.findOne({ email: req.user?.email });
 
         if (!user) {
             httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
@@ -83,6 +89,7 @@ const addDetails = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         user.name = username;
+        user.rollNumber = rollNumber;
         user.phoneNumber = phoneNumber;
         user.securityQuestions = securityQuestions;
         await user.save();
@@ -103,7 +110,13 @@ const addDetails = async (req: Request, res: Response, next: NextFunction) => {
                 techStack,
             });
         }
-        httpResponse(req, res, 200, 'Details added successfully', null);
+        httpResponse(req, res, 200, 'Details added successfully', {
+            user: {
+                email: user.email,
+                verified: user.verified,
+                name: user.name
+            }
+        });
     } catch (error) {
         httpError(next, error, req, 404);
         return;
