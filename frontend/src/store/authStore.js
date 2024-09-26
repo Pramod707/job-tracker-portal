@@ -86,7 +86,7 @@ export const useAuthStore = create((set) => ({
             const response = await axios.post(`${API_URL}/api/verify`);
             console.log(response)
             if (response.data.data.success) {
-                set({ isAuthenticated: true, isCheckingAuth: false });
+                set({ user: response.data.data.user, isAuthenticated: true, isCheckingAuth: false });
                 <Navigate to='/' replace />
             } else {
                 set({ user: undefined, isAuthenticated: false, isCheckingAuth: false });
