@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Define the string literals for branches
 type Branch = 'Computer Science' | 'Electronics and Communication' | 'Mechanical' | 'Civil' | 'Electrical' | 'Information Technology' | 'Computer Science DS' | 'Computer Science AI&ML' | 'Computer Science IoT';
 type Interest = 'govt job' | 'internship' | 'pvt job' | 'core job' | 'mtech' | 'ms';
 type JobStatus = 'applied' | 'not applied' | 'shortlisted' | 'rejected' | 'declined' | 'coding round' | 'interview' | 'technical interview' | 'hr interview' | 'aptitude test';

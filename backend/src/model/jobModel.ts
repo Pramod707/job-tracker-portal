@@ -1,14 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Define the sub-schema for jobDescription
 interface JobDescription {
-  responsibility: string[];
-  experience: string[];
-  benefits?: string[];
-  extraDetails?: string[];
+  responsibility: string;
+  experience: string;
+  benefits?: string;
+  extraDetails?: string;
 }
 
-// Define the main Job interface
 interface Job extends Document {
   companyName: string;
   jobTitle: string;
@@ -18,7 +16,7 @@ interface Job extends Document {
   applicationLink: string;
   postedDate: Date;
   dueDate: Date;
-  techStack?: string[];
+  techStack: string[];
   eligibility: string;
   type: 'internship' | 'part-time' | 'full-time';
   remote: 'remote' | 'on-site' | 'hybrid';
@@ -41,21 +39,21 @@ const jobSchema = new Schema<Job>({
   jobDescription: {
     type: new Schema<JobDescription>({
       responsibility: {
-        type: [String],
+        type: String,
         required: true,
         trim: true
       },
       experience: {
-        type: [String],
+        type: String,
         required: true,
         trim: true
       },
       benefits: {
-        type: [String],
+        type: String,
         trim: true
       },
       extraDetails: {
-        type: [String],
+        type: String,
         trim: true
       }
     }),
