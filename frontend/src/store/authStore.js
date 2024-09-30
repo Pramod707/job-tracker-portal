@@ -21,7 +21,7 @@ export const useAuthStore = create((set) => ({
             console.log(response)
             set({ isLoading: false });
         } catch (error) {
-            set({ error: error.response.data.message || "Error signing up", isLoading: false });
+            set({ error: error.response?.data?.data.message || "Error signing up", isLoading: false });
             throw error;
         }
     },
@@ -76,7 +76,7 @@ export const useAuthStore = create((set) => ({
             set({ user: response.data.data.user, isAuthenticated: true, isLoading: false });
             return response.data;
         } catch (error) {
-            set({ error: error.response.data.message || "Error verifying email", isLoading: false });
+            set({ error: error.response?.data?.data.message || "Error verifying email", isLoading: false });
             throw error;
         }
     },
@@ -93,7 +93,7 @@ export const useAuthStore = create((set) => ({
                 <Navigate to='/login' replace />
             }
         } catch (error) {
-            set({ error: null, isCheckingAuth: false, isAuthenticated: false });
+            set({ error: error.response?.data?.data?.message||'Invalid Token', isCheckingAuth: false, isAuthenticated: false });
         }
     },
     forgotPassword: async (email) => {
@@ -105,7 +105,7 @@ export const useAuthStore = create((set) => ({
         } catch (error) {
             set({
                 isLoading: false,
-                error: error.response.data.message || "Error sending reset password email",
+                error: error.response?.data?.data.message || "Error sending reset password email",
             });
             throw error;
         }
@@ -119,7 +119,7 @@ export const useAuthStore = create((set) => ({
         } catch (error) {
             set({
                 isLoading: false,
-                error: error.response.data.message || "Error resetting password",
+                error: error.response?.data?.data.message || "Error resetting password",
             });
             throw error;
         }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { Spinner } from "@nextui-org/react";
 
 const Login = () => {
   const [formDetails, setFormDetails] = useState({
@@ -63,7 +64,7 @@ const Login = () => {
           disabled={isLoading}
           className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
         >
-          Send OTP
+          {isLoading ? <Spinner color="primary"/> : 'Send OTP'}
         </Button>
       </form>
     </div>

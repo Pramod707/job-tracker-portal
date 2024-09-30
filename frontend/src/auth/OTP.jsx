@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '@nextui-org/react';
 import { useAuthStore } from '../store/authStore';
+import { Spinner } from "@nextui-org/react";
 
 const OTP = () => {
   const [otpArray, setOtpArray] = useState(Array(4).fill(""));
@@ -91,7 +92,7 @@ const OTP = () => {
         onClick={handleSubmit}
         disabled={isLoading}
       >
-        Verify OTP
+        {isLoading ? <Spinner color="primary" /> : 'Verify OTP'}
       </Button>
     </div>
   );

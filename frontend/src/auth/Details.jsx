@@ -4,6 +4,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-o
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { Spinner } from "@nextui-org/react";
 
 const MyForm = () => {
   const [branch, setBranch] = useState("Branch");
@@ -189,7 +190,7 @@ const MyForm = () => {
             type="submit"
             className='text-white border-2 border-[#0037FF32] bg-[#0037FF] shadow-md w-full'
           >
-            Finish Setup
+        {isLoading ? <Spinner color="primary" /> : 'Finish Setup'}
           </Button>
         </div>
       </form>
