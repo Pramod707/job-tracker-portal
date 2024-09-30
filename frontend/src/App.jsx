@@ -59,7 +59,7 @@ const App = () => {
           </RedirectAuthenticatedUser>
         } />
         <Route path='/signup/add-details' element={
-            <Details />
+          <Details />
         } />
         <Route path='/login' element={
           <RedirectAuthenticatedUser>
@@ -67,7 +67,7 @@ const App = () => {
           </RedirectAuthenticatedUser>
         } />
         <Route path='/otp' element={
-            <OtpInput />
+          <OtpInput />
         } />
         <Route path='/reset-password' element={
           <RedirectAuthenticatedUser>
