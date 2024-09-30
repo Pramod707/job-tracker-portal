@@ -8,10 +8,10 @@ interface JobDocument {
   companyName: string;
   jobTitle: string;
   jobDescription: {
-    responsibility: string[];
-    experience: string[];
-    benefits?: string[];
-    extraDetails?: string[];
+    responsibility: string;
+    experience: string;
+    benefits?: string;
+    extraDetails?: string;
   };
   locations: string[];
   applicationLink: string;
