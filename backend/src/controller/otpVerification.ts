@@ -8,8 +8,7 @@ import { sendWelcomeEmail } from '../service/email';
 const otpVerification = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { otp: userOtp } = req.body;
-    
-    
+    // console.log(userOtp);
     const user = await User.findOne({
       email: req.user?.email,
       OtpExpiresAt: { $gt: Date.now() },

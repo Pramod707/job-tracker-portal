@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '@nextui-org/react';
 import { useAuthStore } from '../store/authStore';
 import { Spinner } from "@nextui-org/react";
+import { toast } from 'react-toastify';
 
 const OTP = () => {
   const [otpArray, setOtpArray] = useState(Array(4).fill(""));
@@ -60,11 +61,11 @@ const OTP = () => {
           navigate('/');
         }
       } catch (err) {
-        console.error("Error during OTP submission:", err);
+        toast.error("Error during OTP submission:", err);
         setMessage(error);
       }
     } else {
-      setMessage("Please enter a valid 4-digit OTP.");
+      toast.error("Please enter a valid 4-digit OTP.");
     }
   };
 
