@@ -52,7 +52,7 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
     },
     OtpExpiresAt: Date,
     resetPasswordToken: String,
-    resetPasswordExpiresAt: Date,
+    resetPasswordExpiresAt: Date
 }, {
     timestamps: true,
 });

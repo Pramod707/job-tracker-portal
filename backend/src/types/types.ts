@@ -37,7 +37,7 @@ export interface IUser extends Document {
     verified: boolean;
     createdAt: Date;
     updatedAt: Date;
-    resetPasswordToken: string;
-    resetPasswordExpiresAt: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpiresAt?: Date;
     OtpExpiresAt: Date;
 }
