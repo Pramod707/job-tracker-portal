@@ -13,6 +13,7 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
     isCheckingAuth: true,
     message: null,
+    data: null,
 
     signup: async (email, password) => {
         set({ isLoading: true, error: null });
@@ -93,7 +94,7 @@ export const useAuthStore = create((set) => ({
                 <Navigate to='/login' replace />
             }
         } catch (error) {
-            set({ error: error.response?.data?.data?.message||'Invalid Token', isCheckingAuth: false, isAuthenticated: false });
+            set({ error: error.response?.data?.data?.message || 'Invalid Token', isCheckingAuth: false, isAuthenticated: false });
         }
     },
     forgotPassword: async (email) => {
@@ -124,4 +125,31 @@ export const useAuthStore = create((set) => ({
             throw error;
         }
     },
+    addJob: async (formData) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(`${API_URL}/api/create-job`, formData);
+            console.log(response)
+            set({ message: response.data.data.message, isLoading: false });
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.data.message || "Error creating job",
+            });
+            throw error;
+        }
+    },
+    getJobs:async(criteria)=>{
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(`${API_URL}/api/get-jobs`, criteria);
+            set({ data: response.data.data, message: response.data.data.message, isLoading: false });
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.data.message || "Error getting job",
+            });
+            throw error;
+        }
+    }
 }));
