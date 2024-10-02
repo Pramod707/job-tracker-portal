@@ -6,6 +6,6 @@ const app = express();
 
 app.post('/forgot-password', forgotPassword);
 
-app.post('/reset-password', auth, resetPassword);
+app.post('/reset-password/:token',resetPassword);
 
 export default app;
