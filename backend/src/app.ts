@@ -1,7 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
-import config from './config/config';
 import cookieParser from 'cookie-parser';
 
 import signupRoute from './router/signupRoute';
@@ -13,20 +11,13 @@ import logoutRoute from './router/logoutRoute';
 
 import auth from './middleware/auth';
 import globalErrorHandler from './middleware/globalErrorHandler';
-import httpError from './util/httpError';
 import responseMessage from './constant/responseMessage';
+import httpError from './util/httpError';
 import httpResponse from './util/httpResponse';
+import connectDb from './db/connectDb';
 
 const app = express();
-
-// MongoDB connection
-const mongoURI: string | undefined = config.MONGO_URI;
-mongoose.connect(mongoURI!)
-    .then(() => {
-        console.log("Connected to MongoDB");
-    }).catch((error: Error) => {
-        console.error("Error connecting to MongoDB: ", error);
-    });
+connectDb();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

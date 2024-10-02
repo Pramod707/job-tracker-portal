@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { VERIFICATION, WELCOME, RESET_PASSWORD, FORGOT_PASSWORD } from '../util/emailTemplate';
+import config from '../config/config';
 
 interface EmailServiceOptions {
     email: string;
@@ -15,8 +16,8 @@ async function createTransporter() {
     return nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_ID,
-            pass: process.env.EMAIL_APP_PASSWORD
+            user: config.EMAIL_ID,
+            pass: config.EMAIL_APP_PASSWORD
         },
     });
 }

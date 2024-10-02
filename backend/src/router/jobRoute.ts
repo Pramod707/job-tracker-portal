@@ -69,7 +69,7 @@ app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFuncti
 
         const totalJobs = await Job.countDocuments(query);
 
-        const response = {
+        const data = {
             jobs,
             totalJobs,
             currentPage: pageNumber,
@@ -77,7 +77,7 @@ app.post('/get-jobs', auth, async (req: Request, res: Response, next: NextFuncti
             success: true
         };
 
-        httpResponse(req, res, 200, responseMessage.SUCCESS, response);
+        httpResponse(req, res, 200, responseMessage.SUCCESS, data);
     } catch (error) {
         httpError(next, error, req, 500);
     }

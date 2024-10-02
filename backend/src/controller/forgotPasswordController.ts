@@ -26,11 +26,10 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
       await user.save();
     }, 10000 * 12);
 
-    const token = setToken(user.email, user.verified, user.name);
     const resp = await sendVerificationEmail({ email, OTP, username: user.email });
 
     if (resp) {
-      return res.status(200).json({ token, OTP, success: true });
+      return res.status(200).json({ success: true });
     } else {
       return res.status(500).json({ success: false, message: 'Failed to send email' });
     }

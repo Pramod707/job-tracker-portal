@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import config from "../config/config";
 
 export const setCookie = (res: Response, token: string | null) => {
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.ENV === "production",
+        secure: config.ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
