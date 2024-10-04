@@ -55,8 +55,6 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
             await User.deleteOne({ email, verified: false });
         }, 2 * 60 * 1000);
 
-        const token = setToken(user.email, user.verified, user.name);
-        setCookie(res, token);
         const resp = await sendVerificationEmail({ email, OTP, username: user.email });
         if (resp) {
             httpResponse(req, res, 201, responseMessage.SUCCESS, {
@@ -65,7 +63,6 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
                     verified: user.verified,
                     name: user.name
                 },
-                token,
                 success: true
             });
         } else {

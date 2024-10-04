@@ -4,13 +4,14 @@ import httpError from '../util/httpError';
 import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
 import { sendWelcomeEmail } from '../service/email';
+import { setToken } from '../service/token';
+import { setCookie } from '../util/cookie';
 
 const otpVerification = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { otp: userOtp } = req.body;
-    // console.log(userOtp);
     const user = await User.findOne({
-      email: req.user?.email,
+      otp: userOtp,
       OtpExpiresAt: { $gt: Date.now() },
     });
 
@@ -27,6 +28,9 @@ const otpVerification = async (req: Request, res: Response, next: NextFunction) 
       user.verified = true;
       user.otp = undefined;
       await user.save();
+      const token = setToken(user.email, user.verified, user.name);
+      setCookie(res, token);
+      
       httpResponse(req, res, 200, 'Valid OTP', {
         user: {
           email: user.email,

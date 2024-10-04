@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
-// import Cookies from 'js-cookie'
 
 const API_URL = 'http://localhost:3001';
 axios.defaults.withCredentials = true;

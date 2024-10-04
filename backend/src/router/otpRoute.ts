@@ -5,6 +5,6 @@ import auth from '../middleware/auth';
 
 const app = express();
 
-app.post('/', auth, otpVerification);
+app.post('/', otpVerification);
 
 export default app;

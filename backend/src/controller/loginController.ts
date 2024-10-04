@@ -40,8 +40,6 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       await user.save();
     }, 2 * 60 * 1000);
 
-    const token = setToken(user.email, user.verified, user.name);
-    setCookie(res, token);
     const resp = await sendVerificationEmail({ email, OTP, username: user.email });
     if (resp) {
       httpResponse(req, res, 200, responseMessage.SUCCESS, {
@@ -50,7 +48,6 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
           verified: user.verified,
           name: user.name
         },
-        token,
         success: true
       });
     } else {

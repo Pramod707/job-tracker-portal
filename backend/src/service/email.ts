@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { VERIFICATION, WELCOME, RESET_PASSWORD, FORGOT_PASSWORD,PASSWORD_RESET_SUCCESS } from '../util/emailTemplate';
+import config from '../config/config';
 
 interface EmailServiceOptions {
     email: string;
