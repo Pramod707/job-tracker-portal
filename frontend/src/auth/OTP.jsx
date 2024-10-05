@@ -88,13 +88,19 @@ const OTP = () => {
           />
         ))}
       </div>
-      <Button
-        className='text-white bg-gradient-to-b from-[#0037FF] to-[#002DD1] border-2 font-semibold'
-        onClick={handleSubmit}
-        disabled={isLoading}
-      >
-        {isLoading ? <Spinner color="primary" /> : 'Verify OTP'}
-      </Button>
+
+      {
+        isLoading ?
+          <Spinner color="primary" />
+
+          :
+          <Button
+            onClick={handleSubmit}  
+            className='text-white bg-gradient-to-b from-[#0037FF] to-[#002DD1] border-2 font-semibold'
+          >
+            Verify OTP
+          </Button>
+      }
     </div>
   );
 };

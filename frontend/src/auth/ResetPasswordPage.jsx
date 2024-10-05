@@ -24,13 +24,10 @@ const ResetPasswordPage = () => {
         try{await resetPassword(token, password);
         toast.success('Password reset successfull...');
         setIsSubmitted(true);
-        setTimeout(() => {
-            // navigate('/login'); 
-          }, 5000);
          }
           catch(error){
             console.log(error);
-            toast.error(error.response?.data?.data.message ||"Error resetting password");  
+            toast.error(error.message ||"Error resetting password");  
           }
         
     };

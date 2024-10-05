@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 import { getUser } from '../service/token';
 import { getCookie } from '../util/cookie'
+import httpError from "../util/httpError";
 
-function auth(req: Request, res: Response, next: NextFunction) {
+function auth(req: Request, _res: Response, next: NextFunction) {
     const token = getCookie(req);
 
     if (token) {
@@ -12,10 +13,10 @@ function auth(req: Request, res: Response, next: NextFunction) {
             req.user = payload;
             next();
         } else {
-            res.status(401).json({ success: false, message: 'Unauthorized' });
+            httpError(next, new Error('Unauthorized'), req, 401);
         }
     } else {
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+        httpError(next, new Error('Unauthorized'), req, 401);
     }
 }
 

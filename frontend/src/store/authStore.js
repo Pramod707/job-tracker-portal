@@ -17,26 +17,27 @@ export const useAuthStore = create((set) => ({
     signup: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await axios.post(`${API_URL}/api/signup`, { email, password });
-            console.log(response)
             set({ isLoading: false });
         } catch (error) {
-            set({ error: error.response?.data?.data.message || "Error signing up", isLoading: false });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
     login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await axios.post(`${API_URL}/api/login`, { email, password });
-            console.log(response.data.data.user);
-
             set({
                 error: null,
                 isLoading: false,
             });
         } catch (error) {
-            set({ error: error.response?.data?.data.message || "Error logging in", isLoading: false });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -46,7 +47,6 @@ export const useAuthStore = create((set) => ({
             const response = await axios.post(`${API_URL}/api/login`,
                 { ...formData }
             );
-            console.log(response)
             set({
                 user: response.data.data.user,
                 isAuthenticated: true,
@@ -54,7 +54,8 @@ export const useAuthStore = create((set) => ({
                 isLoading: false,
             });
         } catch (error) {
-            set({ error: error.response?.data?.data.message || "Error logging in", isLoading: false });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -64,7 +65,8 @@ export const useAuthStore = create((set) => ({
             await axios.post(`${API_URL}/api/logout`);
             set({ user: null, isAuthenticated: false, error: null, isLoading: false });
         } catch (error) {
-            set({ error: "Error logging out", isLoading: false });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -72,11 +74,11 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/otp`, { otp });
-            console.log(response)
             set({ user: response.data.data.user, isAuthenticated: true, isLoading: false });
             return response.data;
         } catch (error) {
-            set({ error: error.response?.data?.data.message || "Error verifying email", isLoading: false });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -84,7 +86,6 @@ export const useAuthStore = create((set) => ({
         set({ isCheckingAuth: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/verify`);
-            console.log(response)
             if (response.data.data.success) {
                 set({ user: response.data.data.user, isAuthenticated: true, isCheckingAuth: false });
                 <Navigate to='/' replace />
@@ -93,20 +94,17 @@ export const useAuthStore = create((set) => ({
                 <Navigate to='/login' replace />
             }
         } catch (error) {
-            set({ error: error.response?.data?.data?.message || 'Invalid Token', isCheckingAuth: false, isAuthenticated: false });
+            set({ error: error.response.data.err.message, isCheckingAuth: false, isAuthenticated: false });
         }
     },
     forgotPassword: async (email) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
-            console.log(response)
-            set({ message: response.data.message, isLoading: false });
+            set({ message: response?.data?.data?.message, isLoading: false });
         } catch (error) {
-            set({
-                isLoading: false,
-                error: error.response?.data?.data.message || "Error sending reset password email",
-            });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -114,13 +112,10 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/auth/reset-password/${token}`, { password });
-            console.log(response)
             set({ message: response.data.message, isLoading: false });
         } catch (error) {
-            set({
-                isLoading: false,
-                error: error.response?.data?.data.message || "Error resetting password",
-            });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
@@ -128,26 +123,21 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/create-job`, formData);
-            console.log(response)
             set({ message: response.data.data.message, isLoading: false });
         } catch (error) {
-            set({
-                isLoading: false,
-                error: error.response?.data?.data.message || "Error creating job",
-            });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     },
-    getJobs:async(criteria)=>{
+    getJobs: async (criteria) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(`${API_URL}/api/get-jobs`, criteria);
             set({ data: response.data.data, message: response.data.data.message, isLoading: false });
         } catch (error) {
-            set({
-                isLoading: false,
-                error: error.response?.data?.data.message || "Error getting job",
-            });
+            set({ error: error.response.data.err.message, isLoading: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
             throw error;
         }
     }
