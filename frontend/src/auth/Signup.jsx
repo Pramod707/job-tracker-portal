@@ -3,7 +3,7 @@ import { Input, Button } from "@nextui-org/react";
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Spinner } from "@nextui-org/react";
-
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [formDetails, setFormDetails] = useState({
@@ -11,14 +11,13 @@ const Signup = () => {
     password: ""
   });
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
   const { signup, error, isLoading } = useAuthStore();
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
     if (formDetails.email === "" || formDetails.password === "") {
-      setMessage("Please enter email and password");
+      toast.error("Please enter email and password");
       return;
     }
 
@@ -26,10 +25,10 @@ const Signup = () => {
       await signup(formDetails.email, formDetails.password);
       navigate('/otp', { state: { from: 'signup' } });
       setFormDetails({ email: "", password: "" });
-      setMessage("");
+      toast.success('Otp sent successfully...');
     } catch (err) {
       console.error("Error during signup:", err);
-      setMessage(error);
+      toast.error(error);
     }
   };
 
@@ -44,7 +43,6 @@ const Signup = () => {
         </p>
       </div>
 
-      {message && <p className="text-red-500">{message}</p>}
       <form onSubmit={handleSignup} className='w-full flex flex-col gap-[1rem] justify-center items-center'>
         <Input
           required
@@ -64,15 +62,19 @@ const Signup = () => {
           value={formDetails.password}
           onChange={(e) => setFormDetails({ ...formDetails, password: e.target.value })}
         />
+        {
+          isLoading ?
+            <Spinner color="success" />
 
-        <Button
-          type="submit"
-          disabled={isLoading}
-          className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
-        >
-          {isLoading ? <Spinner color="primary" /> : 'Send OTP'}
-
-        </Button>
+            :
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className='bg-white border-2 border-[#0037FF32] text-[#0037FF] shadow-md w-fit'
+            >
+              Send OTP
+            </Button>
+        }
       </form>
     </div>
   );

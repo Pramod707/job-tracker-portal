@@ -183,18 +183,23 @@ const MyForm = () => {
           </DropdownMenu>
         </Dropdown>
 
-        {/* Submit Button */}
-        <div className="col-span-2">
-          <Button
-            disabled={isLoading}
-            type="submit"
-            className='text-white border-2 border-[#0037FF32] bg-[#0037FF] shadow-md w-full'
-          >
-        {isLoading ? <Spinner color="primary" /> : 'Finish Setup'}
-          </Button>
-        </div>
-      </form>
-    </div>
+
+        {
+          isLoading ?
+            <Spinner color="primary" />
+
+            :
+            <div className="col-span-2">
+              <Button
+                type='submit'
+                className='text-white border-2 border-[#0037FF32] bg-[#0037FF] shadow-md w-full'
+              >
+                Finish Setup
+              </Button>
+            </div>
+        }
+      </form >
+    </div >
   );
 }
 
