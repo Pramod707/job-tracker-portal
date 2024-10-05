@@ -1,19 +1,24 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import User from '../model/userModel';
 import { otpGenerator } from '../service/otp';
 import { setToken } from '../service/token';
-import { sendResetPasswordEmail, sendVerificationEmail ,sendResetSuccess} from '../service/email';
+import { sendResetPasswordEmail, sendVerificationEmail, sendResetSuccess } from '../service/email';
 import crypto from 'crypto';
-const forgotPassword = async (req: Request, res: Response): Promise<Response | void> => {
+import httpError from '../util/httpError';
+import responseMessage from '../constant/responseMessage';
+import httpResponse from '../util/httpResponse';
+const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const { email } = req.body;
     if (!email) {
-      return res.status(400).json({ message: 'Email is required', success: false });
+      httpError(next, new Error('Email is required'), req, 400);
+      return;
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found', success: false });
+      httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
+      return;
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
@@ -26,36 +31,35 @@ const forgotPassword = async (req: Request, res: Response): Promise<Response | v
 
     //send email
     await sendResetPasswordEmail({ email, resetURL: `${process.env.CLIENT_URL}/reset-password/${resetToken}` });
-    res.status(200).json({ success: true, message: 'Password reset link sent to your email' });
+    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Check your email for password reset link' });
   } catch (error: any) {
-    console.error('Error in forgotPassword:', error);
-    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    httpError(next, error, req, 500);
   }
 };
 
-const resetPassword = async (req: Request, res: Response): Promise<Response | void> => {
+const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
-    const {token} = req.params;
+    const { token } = req.params;
     const { password } = req.body;
 
     if (!password) {
-      return res.status(400).json({ message: 'Please enter all the fields', success: false });
+      httpError(next, new Error('Password is required'), req, 400);
+      return;
     }
 
     const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } });
-    if(!user){
-      return res.status(400).json({success:false,message:"Invalid or expired reset token"});
+    if (!user) {
+      httpError(next, new Error('Invalid or expired reset token'), req, 400);
+      return;
     }
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
     await user.save();
     await sendResetSuccess({ email: user.email, username: user.email });
-
-    res.status(200).json({ success: true, message: 'Password reset successfully' });
+    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Password reset successfully' });
   } catch (error) {
-    console.error('Error in resetPassword:', error);
-    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    httpError(next, error, req, 500);
   }
 };
 

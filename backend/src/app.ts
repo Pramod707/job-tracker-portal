@@ -40,8 +40,8 @@ app.post('/api/verify', auth, (req: Request, res: Response) => {
 })
 
 //
-app.get('/', auth, (_req: Request, res: Response) => {
-    res.send({ message: "Hello" });
+app.get('/', auth, (req: Request, res: Response) => {
+    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Welcome to Job Portal' })
 });
 
 // 404 Handler
