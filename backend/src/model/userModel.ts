@@ -1,14 +1,10 @@
-import mongoose, { Document, Schema, Model, model } from 'mongoose';
+import { Schema, Model, model } from 'mongoose';
 import { IUser } from '../types/types';
 
 const UserSchema: Schema<IUser> = new Schema<IUser>({
     name: {
         type: String,
         trim: true,
-    },
-    rollNumber:{
-        type:String,
-        trim:true
     },
     email: {
         type: String,
@@ -22,6 +18,11 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
             message: (props: { value: string }) => `${props.value} is not a valid email!`,
         },
     },
+    role: {
+        type: String,
+        enum: ['student', 'admin', 'hr', 'placements'],
+        default: 'student',
+    },
     phoneNumber: {
         type: String,
         trim: true,
@@ -30,14 +31,6 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
         type: String,
         required: true,
         minlength: 6,
-    },
-    securityQuestions: {
-        type: [
-            {
-                question: { type: String, required: true },
-                answer: { type: String, required: true },
-            },
-        ],
     },
     studentDetails: {
         type: Schema.Types.ObjectId,

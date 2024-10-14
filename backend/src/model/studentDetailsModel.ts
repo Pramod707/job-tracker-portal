@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model, model } from 'mongoose';
 
 type Branch = 'Computer Science' | 'Electronics and Communication' | 'Mechanical' | 'Civil' | 'Electrical' | 'Information Technology' | 'Computer Science DS' | 'Computer Science AI&ML' | 'Computer Science IoT';
 type Interest = 'govt job' | 'internship' | 'pvt job' | 'core job' | 'mtech' | 'ms';
@@ -13,6 +13,8 @@ interface JobStatusDetail {
 interface StudentDetails extends Document {
   userId: mongoose.Types.ObjectId;
   branch: string;
+  rollNumber: string;
+  securityQuestions?: Array<{ question: string; answer: string }>;
   joiningYear: string;
   intrests: string;
   techStack: string[];
@@ -33,6 +35,18 @@ const studentDetailsSchema = new Schema<StudentDetails>({
     enum: ['Computer Science', 'Electronics and Communication', 'Mechanical', 'Civil', 'Electrical', 'Information Technology', 'Computer Science DS', 'Computer Science AI&ML', 'Computer Science IoT'] as Branch[],
     required: true,
     trim: true
+  },
+  rollNumber: {
+    type: String,
+    trim: true
+  },
+  securityQuestions: {
+    type: [
+      {
+        question: { type: String, required: true },
+        answer: { type: String, required: true },
+      },
+    ],
   },
   joiningYear: {
     type: String,
@@ -71,6 +85,6 @@ const studentDetailsSchema = new Schema<StudentDetails>({
   timestamps: true
 });
 
-const StudentDetailsModel = mongoose.model<StudentDetails>('StudentDetails', studentDetailsSchema);
+const StudentDetailsModel: Model<StudentDetails> = model<StudentDetails>('StudentDetails', studentDetailsSchema);
 
 export default StudentDetailsModel;

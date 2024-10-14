@@ -28,10 +28,9 @@ export type THttpError = {
 export interface IUser extends Document {
     name?: string;
     email: string;
-    rollNumber:string;
+    role: string;
     phoneNumber?: string;
     password: string;
-    securityQuestions?: Array<{ question: string; answer: string }>;
     studentDetails?: mongoose.Types.ObjectId;
     otp: string|undefined;
     verified: boolean;

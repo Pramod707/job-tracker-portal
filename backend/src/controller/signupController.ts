@@ -7,18 +7,20 @@ import UserInfo from '../model/studentDetailsModel';
 import httpError from '../util/httpError';
 import httpResponse from '../util/httpResponse';
 import responseMessage from '../constant/responseMessage';
+import mongoose from 'mongoose';
 
 interface SignupRequest extends Request {
     body: {
         email: string;
         password: string;
+        role:string|undefined
     };
 }
 
 const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 ) => {
     try {
-        const { email, password } = req.body;
+        const { email, password ,role } = req.body;
 
         if (!email || !password) {
             httpError(next, new Error("Please enter all the fields"), req, 400);
@@ -55,10 +57,6 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
             verified: false
         });
 
-        setTimeout(async () => {
-            await User.deleteOne({ email, verified: false });
-        }, 2 * 60 * 1000);
-
         const resp = await sendVerificationEmail({ email, OTP, username: user.email });
         if (resp) {
             httpResponse(req, res, 201, responseMessage.SUCCESS, {
@@ -70,6 +68,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
                 success: true
             });
         } else {
+            await User.deleteOne({ email, verified: false });
             httpError(next, new Error("Failed to send email"), req, 500);
             return;
         }
@@ -78,6 +77,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
         return;
     }
 };
+
 
 const addDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -90,27 +90,29 @@ const addDetails = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         user.name = username;
-        user.rollNumber = rollNumber;
         user.phoneNumber = phoneNumber;
-        user.securityQuestions = securityQuestions;
-        await user.save();
-
+        
         const detailsExists = await UserInfo.findOne({ userId: user._id });
         if (detailsExists) {
+            detailsExists.rollNumber = rollNumber;
+            detailsExists.securityQuestions = securityQuestions;
             detailsExists.branch = branch;
             detailsExists.joiningYear = joiningYear;
             detailsExists.intrests = intrests;
             detailsExists.techStack = techStack;
             await detailsExists.save();
+            user.studentDetails= detailsExists._id as mongoose.Types.ObjectId;
         } else {
-            await UserInfo.create({
+            const details = await UserInfo.create({
                 userId: user._id,
                 branch,
                 joiningYear,
                 intrests,
                 techStack,
             });
+            user.studentDetails= details._id as mongoose.Types.ObjectId;
         }
+        await user.save();
         httpResponse(req, res, 200, 'Details added successfully', {
             user: {
                 email: user.email,
