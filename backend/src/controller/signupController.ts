@@ -7,8 +7,6 @@ import UserInfo from '../model/studentDetailsModel';
 import httpError from '../util/httpError';
 import httpResponse from '../util/httpResponse';
 import responseMessage from '../constant/responseMessage';
-import { setToken } from '../service/token';
-import { setCookie } from '../util/cookie';
 
 interface SignupRequest extends Request {
     body: {
@@ -24,6 +22,12 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 
         if (!email || !password) {
             httpError(next, new Error("Please enter all the fields"), req, 400);
+            return;
+        }
+
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            httpError(next, new Error("User already exists"), req, 400);
             return;
         }
 

@@ -1,14 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { sendVerificationEmail } from '../service/email';
 import { otpGenerator } from '../service/otp';
-import { setToken } from '../service/token';
 import User from '../model/userModel';
 import httpError from '../util/httpError';
 import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
-import { setCookie } from '../util/cookie';
-import { Document } from 'mongoose';
-import { IUser } from '../types/types';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
