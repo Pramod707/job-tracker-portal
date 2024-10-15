@@ -85,7 +85,7 @@ const MyForm = () => {
           label="Phone Number"
           placeholder='9876543210'
           className="w-full"
-          name="phone"
+          name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleInputChange}
         />
