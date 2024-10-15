@@ -6,7 +6,7 @@ type JobStatus = 'applied' | 'not applied' | 'shortlisted' | 'rejected' | 'decli
 
 interface JobStatusDetail {
   jobId: mongoose.Types.ObjectId;
-  taskId: mongoose.Types.ObjectId;
+  taskId: mongoose.Types.ObjectId[];
   status: string;
 }
 
@@ -70,10 +70,11 @@ const studentDetailsSchema = new Schema<StudentDetails>({
         type: Schema.Types.ObjectId,
         ref: 'Job'
       },
-      taskId: {
+      taskId: [{
         type: Schema.Types.ObjectId,
-        ref: 'Task'
-      },
+        ref: 'Task',
+        default: []
+      }],
       status: {
         type: String,
         enum: ['applied', 'not applied', 'shortlisted', 'rejected', 'declined', 'coding round', 'interview', 'technical interview', 'hr interview', 'aptitude test'] as JobStatus[],

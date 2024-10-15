@@ -8,6 +8,9 @@ import httpResponse from '../util/httpResponse';
 import httpError from '../util/httpError';
 
 import responseMessage from '../constant/responseMessage';
+import { userInfo } from 'os';
+import StudentDetailsModel from '../model/studentDetailsModel';
+import Task from '../model/taskModel';
 
 interface JobDocument extends Document {
   companyName: string;
@@ -157,4 +160,51 @@ const getJobs = async (req: Request, res: Response, next: NextFunction): Promise
   }
 }
 
-export { createJob, getJobs };
+const saveJob = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+  try {
+    const email = req.user?.email;
+    const user = await User.findOne({ email });
+    if (!user) {
+      httpError(next, new Error(responseMessage.NOT_FOUND('User')), req, 404);
+      return;
+    }
+    const { jobId, status, task } = req.body as { jobId: string, status: string, task: { taskName: string, description: string, dueDate: Date } | null };
+
+    const job = await Job.findOne({ _id: jobId });
+    if (!job) {
+      httpError(next, new Error(responseMessage.NOT_FOUND('Job')), req, 404);
+      return;
+    }
+    const studentDetails = await StudentDetailsModel.findOne({ userId: user._id });
+    if (!studentDetails) {
+      httpError(next, new Error(responseMessage.NOT_FOUND('Student Details')), req, 404);
+      return;
+    }
+    const exists = studentDetails.jobs.applied.find((job) => job.jobId.equals(jobId));
+
+    const { taskName, description, dueDate } = task!;
+    const taskDetails = await Task.create({
+      userId: user._id as mongoose.Types.ObjectId,
+      jobId: job._id as mongoose.Types.ObjectId,
+      taskName,
+      description,
+      dueDate
+    });
+
+    if (exists) {
+      exists.status = status;
+      exists.taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
+    } else {
+      studentDetails.jobs.applied.push({ jobId: job._id as mongoose.Types.ObjectId, taskId: [], status });
+      studentDetails.jobs.applied[studentDetails.jobs.applied.length - 1].taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
+    }
+
+    await studentDetails.save();
+    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Job applied successfully' });
+  } catch (error) {
+    httpError(next, error, req, 500);
+    return;
+  }
+}
+
+export { createJob, getJobs, saveJob };

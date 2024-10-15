@@ -6,8 +6,6 @@ interface ITask extends Document {
     taskName: string;
     description: string;
     dueDate: Date;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 const TaskSchema: Schema<ITask> = new Schema<ITask>({
