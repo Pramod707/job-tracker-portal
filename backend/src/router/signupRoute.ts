@@ -1,12 +1,13 @@
 import express from 'express';
 
 import auth from '../middleware/auth';
+
 import { signupUser, addDetails } from '../controller/signupController';
 
-const app = express();
+const router = express.Router();
 
-app.post('/', signupUser);
+router.post('/', signupUser);
 
-app.post('/add-details', auth, addDetails);
+router.post('/add-details', auth, addDetails);
 
-export default app;
+export default router;

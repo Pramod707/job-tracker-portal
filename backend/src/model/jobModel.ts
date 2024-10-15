@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 interface JobDescription {
   responsibility: string;
@@ -20,7 +20,8 @@ interface Job extends Document {
   eligibility: string;
   type: 'internship' | 'part-time' | 'full-time';
   remote: 'remote' | 'on-site' | 'hybrid';
-  addedBy: 'Admin' | 'Placements' | 'You';
+  addedBy: 'Admin' | 'Placements' | 'student';
+  addedById: mongoose.Types.ObjectId;
 }
 
 const jobSchema = new Schema<Job>({
@@ -74,7 +75,7 @@ const jobSchema = new Schema<Job>({
     required: true,
     trim: true,
     validate: {
-      validator: function(v: string) {
+      validator: function (v: string) {
         return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
       },
       message: (props: { value: string }) => `${props.value} is not a valid URL!`
@@ -113,12 +114,17 @@ const jobSchema = new Schema<Job>({
   addedBy: {
     type: String,
     required: true,
-    enum: ['Admin', 'Placements', 'You'],
+    enum: ['admin', 'placements', 'student'],
+  },
+  addedById: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 }, {
   timestamps: true
 });
 
-const JobModel = mongoose.model<Job>('Job', jobSchema);
+const JobModel: Model<Job> = mongoose.model<Job>('Job', jobSchema);
 
 export default JobModel;

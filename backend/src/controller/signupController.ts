@@ -1,26 +1,31 @@
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import validator from 'validator';
+
 import { sendVerificationEmail } from '../service/email';
 import { otpGenerator } from '../service/otp';
+import { setToken } from '../service/token';
+
 import User from '../model/userModel';
 import UserInfo from '../model/studentDetailsModel';
+
 import httpError from '../util/httpError';
 import httpResponse from '../util/httpResponse';
+import { setCookie } from '../util/cookie';
+
 import responseMessage from '../constant/responseMessage';
-import mongoose from 'mongoose';
 
 interface SignupRequest extends Request {
     body: {
         email: string;
         password: string;
-        role:string|undefined
+        role: string | undefined
     };
 }
 
-const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
-) => {
+const signupUser = async (req: SignupRequest, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
-        const { email, password ,role } = req.body;
+        const { email, password, role = "student" } = req.body;
 
         if (!email || !password) {
             httpError(next, new Error("Please enter all the fields"), req, 400);
@@ -49,21 +54,22 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 
         const OTP = otpGenerator();
 
-        const user = await User.create({
-            email,
-            password,
-            otp: OTP,
-            OtpExpiresAt: Date.now() + 2 * 60 * 1000,
-            verified: false
-        });
-
-        const resp = await sendVerificationEmail({ email, OTP, username: user.email });
+        const resp = await sendVerificationEmail({ email, OTP, username: email });
         if (resp) {
+            const user = await User.create({
+                email,
+                password,
+                otp: OTP,
+                OtpExpiresAt: Date.now() + 2 * 60 * 1000,
+                verified: false,
+                role
+            });
             httpResponse(req, res, 201, responseMessage.SUCCESS, {
                 user: {
                     email: user.email,
                     verified: user.verified,
-                    name: user.name
+                    name: user.name,
+                    role: user.role
                 },
                 success: true
             });
@@ -79,7 +85,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction
 };
 
 
-const addDetails = async (req: Request, res: Response, next: NextFunction) => {
+const addDetails = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
         const { username, phoneNumber, rollNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
         const user = await User.findOne({ email: req.user?.email });
@@ -91,7 +97,7 @@ const addDetails = async (req: Request, res: Response, next: NextFunction) => {
 
         user.name = username;
         user.phoneNumber = phoneNumber;
-        
+
         const detailsExists = await UserInfo.findOne({ userId: user._id });
         if (detailsExists) {
             detailsExists.rollNumber = rollNumber;
@@ -101,24 +107,33 @@ const addDetails = async (req: Request, res: Response, next: NextFunction) => {
             detailsExists.intrests = intrests;
             detailsExists.techStack = techStack;
             await detailsExists.save();
-            user.studentDetails= detailsExists._id as mongoose.Types.ObjectId;
+
+            user.studentDetails = detailsExists._id as mongoose.Types.ObjectId;
         } else {
             const details = await UserInfo.create({
                 userId: user._id,
+                rollNumber,
+                securityQuestions,
                 branch,
                 joiningYear,
                 intrests,
                 techStack,
             });
-            user.studentDetails= details._id as mongoose.Types.ObjectId;
+            user.studentDetails = details._id as mongoose.Types.ObjectId;
         }
         await user.save();
+
+        const token = setToken(user.email, user.verified, user.name, user.role);
+        setCookie(res, token);
+
         httpResponse(req, res, 200, 'Details added successfully', {
             user: {
                 email: user.email,
                 verified: user.verified,
-                name: user.name
-            }
+                name: user.name,
+                role: user.role
+            },
+            success: true
         });
     } catch (error) {
         httpError(next, error, req, 404);

@@ -26,9 +26,9 @@ app.use(cookieParser())
 
 // Routes
 app.use('/api/signup', signupRoute);
-app.use('/api/otp', otpRoute);
 app.use('/api/login', loginRoute);
-app.use('/api/jobs', jobRoute);
+app.use('/api/otp', otpRoute);
+app.use('/api/jobs', auth, jobRoute);
 app.use('/api/auth', forgotPasswordRoute);
 app.use('/api/logout', logoutRoute);
 

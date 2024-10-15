@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import { sendVerificationEmail } from '../service/email';
+
 import { otpGenerator } from '../service/otp';
+import { sendVerificationEmail } from '../service/email';
+
 import User from '../model/userModel';
+
 import httpError from '../util/httpError';
-import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
 
-const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+import responseMessage from '../constant/responseMessage';
+
+const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const { email, password } = req.body;
 
@@ -27,22 +31,20 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const OTP: string = otpGenerator();
-    user.otp = OTP;
-    user.OtpExpiresAt = new Date(Date.now() + 2 * 60 * 1000);
-    await user.save();
 
-    setTimeout(async () => {
-      user.otp = undefined;
-      await user.save();
-    }, 2 * 60 * 1000);
+    const resp = await sendVerificationEmail({ email, OTP, username: user.name || user.email });
 
-    const resp = await sendVerificationEmail({ email, OTP, username: user.email });
     if (resp) {
+      user.otp = OTP;
+      user.OtpExpiresAt = new Date(Date.now() + 2 * 60 * 1000);
+      await user.save();
+
       httpResponse(req, res, 200, responseMessage.SUCCESS, {
         user: {
           email: user.email,
           verified: user.verified,
-          name: user.name
+          name: user.name,
+          role: user.role
         },
         success: true
       });

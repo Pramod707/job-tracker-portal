@@ -1,11 +1,11 @@
-import express, { NextFunction, Request, Response } from "express";
-import auth from '../middleware/auth';
+import express from "express";
+
 import { forgotPassword, resetPassword } from '../controller/forgotPasswordController';
 
-const app = express();
+const router = express.Router();
 
-app.post('/forgot-password', forgotPassword);
+router.post('/forgot-password', forgotPassword);
 
-app.post('/reset-password/:token',resetPassword);
+router.post('/reset-password/:token',resetPassword);
 
-export default app;
+export default router;

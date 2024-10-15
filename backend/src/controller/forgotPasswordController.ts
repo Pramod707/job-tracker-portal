@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import User from '../model/userModel';
-import { otpGenerator } from '../service/otp';
-import { setToken } from '../service/token';
-import { sendResetPasswordEmail, sendVerificationEmail, sendResetSuccess } from '../service/email';
 import crypto from 'crypto';
+import validator from 'validator';
+
+import User from '../model/userModel';
+
+import { sendResetPasswordEmail, sendResetSuccess } from '../service/email';
+
 import httpError from '../util/httpError';
-import responseMessage from '../constant/responseMessage';
 import httpResponse from '../util/httpResponse';
+
+import responseMessage from '../constant/responseMessage';
+
 const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const { email } = req.body;
@@ -29,7 +33,6 @@ const forgotPassword = async (req: Request, res: Response, next: NextFunction): 
 
     await user.save();
 
-    //send email
     await sendResetPasswordEmail({ email, resetURL: `${process.env.CLIENT_URL}/reset-password/${resetToken}` });
     httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Check your email for password reset link' });
   } catch (error: any) {
@@ -47,17 +50,38 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
       return;
     }
 
+    const options = {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    };
+
+    const validPassword = validator.isStrongPassword(password, options);
+    if (!validPassword) {
+      httpError(next, new Error("Password is not strong enough"), req, 400);
+      return;
+    }
+
     const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } });
     if (!user) {
       httpError(next, new Error('Invalid or expired reset token'), req, 400);
       return;
     }
+
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
     await user.save();
-    await sendResetSuccess({ email: user.email, username: user.email });
-    httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Password reset successfully' });
+
+    const resp = await sendResetSuccess({ email: user.email, username: user.email });
+    if (resp) {
+      httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Password reset successfully' });
+    } else {
+      httpError(next, new Error('Failed to send email. Try again.'), req, 500);
+      return;
+    }
   } catch (error) {
     httpError(next, error, req, 500);
   }

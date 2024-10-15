@@ -4,13 +4,14 @@ import config from '../config/config';
 interface TokenPayload {
     email: string;
     verified: boolean;
-    name: string | undefined
+    name: string | undefined,
+    role: string
 }
 
 // Function to set token
-const setToken = (email: string, verified: boolean, name: string | undefined): string | null => {
+const setToken = (email: string, verified: boolean, name: string | undefined, role: string = "student"): string | null => {
     try {
-        const token = jwt.sign({ email, verified, name }, config.JWT_SECRET!, { expiresIn: '7d' });
+        const token = jwt.sign({ email, verified, name, role }, config.JWT_SECRET!, { expiresIn: '7d' });
         return token;
     } catch (err) {
         console.error(err);
