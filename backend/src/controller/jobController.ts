@@ -180,25 +180,32 @@ const saveJob = async (req: Request, res: Response, next: NextFunction): Promise
       httpError(next, new Error(responseMessage.NOT_FOUND('Student Details')), req, 404);
       return;
     }
-    const exists = studentDetails.jobs.applied.find((job) => job.jobId.equals(jobId));
+    const exists = studentDetails.jobs.find((job) => job.jobId.equals(jobId));
 
-    const { taskName, description, dueDate } = task!;
-    const taskDetails = await Task.create({
-      userId: user._id as mongoose.Types.ObjectId,
-      jobId: job._id as mongoose.Types.ObjectId,
-      taskName,
-      description,
-      dueDate
-    });
-
+    
     if (exists) {
       exists.status = status;
-      exists.taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
     } else {
-      studentDetails.jobs.applied.push({ jobId: job._id as mongoose.Types.ObjectId, taskId: [], status });
-      studentDetails.jobs.applied[studentDetails.jobs.applied.length - 1].taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
+      studentDetails.jobs.push({ jobId: job._id as mongoose.Types.ObjectId, taskId: [], status });
     }
 
+    if(task){
+      const { taskName, description, dueDate } = task;
+      const taskDetails = await Task.create({
+        userId: user._id as mongoose.Types.ObjectId,
+        jobId: job._id as mongoose.Types.ObjectId,
+        taskName,
+        description,
+        dueDate
+      });
+
+      if(exists){
+        exists.taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
+      } else{
+        studentDetails.jobs[studentDetails.jobs.length - 1].taskId.push(taskDetails?._id as mongoose.Types.ObjectId);
+      }
+    }
+    
     await studentDetails.save();
     httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Job applied successfully' });
   } catch (error) {
