@@ -6,7 +6,7 @@ type JobStatus = 'applied' | 'not applied' | 'shortlisted' | 'rejected' | 'decli
 
 interface JobStatusDetail {
   jobId: mongoose.Types.ObjectId;
-  taskId: mongoose.Types.ObjectId;
+  taskId: mongoose.Types.ObjectId[];
   status: string;
 }
 
@@ -18,9 +18,7 @@ interface StudentDetails extends Document {
   joiningYear: string;
   intrests: string;
   techStack: string[];
-  jobs: {
-    applied: JobStatusDetail[];
-  };
+  jobs: JobStatusDetail[];
 }
 
 const studentDetailsSchema = new Schema<StudentDetails>({
@@ -64,23 +62,22 @@ const studentDetailsSchema = new Schema<StudentDetails>({
     type: [String],
     default: []
   },
-  jobs: {
-    applied: [{
-      jobId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Job'
-      },
-      taskId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Task'
-      },
-      status: {
-        type: String,
-        enum: ['applied', 'not applied', 'shortlisted', 'rejected', 'declined', 'coding round', 'interview', 'technical interview', 'hr interview', 'aptitude test'] as JobStatus[],
-        default: 'not applied'
-      }
-    }]
-  }
+  jobs: [{
+    jobId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Job'
+    },
+    taskId: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Task',
+      default: []
+    }],
+    status: {
+      type: String,
+      enum: ['applied', 'not applied', 'shortlisted', 'rejected', 'declined', 'coding round', 'interview', 'technical interview', 'hr interview', 'aptitude test'] as JobStatus[],
+      default: 'not applied'
+    }
+  }]
 }, {
   timestamps: true
 });
