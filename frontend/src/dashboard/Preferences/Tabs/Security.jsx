@@ -1,17 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@nextui-org/react';
-
+import ChangePassword from '../../../Components/ChangePassword';
 const Security = () => {
   return (
     <div className='flex flex-col justify-start gap-[2rem]'>
-      <h1 className='font-black text-2xl'>Notifications</h1>
+      <h1 className='font-black text-2xl'>Security</h1>
       <div className='flex flex-col gap-[2rem] border-b-2 border-dotted pb-[2rem]'>
         <div className='flex flex-row justify-between items-center gap-[2rem]'>
           <div className='w-full flex flex-col'>
             <h2 className='font-black '>Password</h2>
             <p className='text-[#72908D]'>Change the password for your account</p>
           </div>
-          <Button className='px-[2rem] font-black shadow-sm' variant='bordered'>Change Password</Button>
+          {/* <Button className='px-[2rem] font-black shadow-sm' variant='bordered'>Change Password</Button> */}
+          <ChangePassword/>
         </div>
         <div className='flex flex-row justify-between items-center gap-[2rem]'>
           <div className='w-full flex flex-col'>
