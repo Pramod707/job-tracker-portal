@@ -13,7 +13,7 @@ import responseMessage from '../constant/responseMessage';
 
 const otpVerification = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
-    const { otp: userOtp } = req.body;
+    const { otp: userOtp } = req.body as { otp: string };
     const user = await User.findOne({
       otp: userOtp,
       OtpExpiresAt: { $gt: Date.now() },
@@ -25,7 +25,7 @@ const otpVerification = async (req: Request, res: Response, next: NextFunction):
     }
 
     if (!user.verified) {
-      sendWelcomeEmail({ email: user.email, username: user.name || user.email });
+      await sendWelcomeEmail({ email: user.email, username: user.name || user.email });
     }
 
     if (userOtp === user.otp) {

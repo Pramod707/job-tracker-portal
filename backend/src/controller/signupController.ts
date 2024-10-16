@@ -25,16 +25,16 @@ interface SignupRequest extends Request {
 
 const signupUser = async (req: SignupRequest, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
-        const { email, password, role = "student" } = req.body;
+        const { email, password, role = 'student' } = req.body;
 
         if (!email || !password) {
-            httpError(next, new Error("Please enter all the fields"), req, 400);
+            httpError(next, new Error('Please enter all the fields'), req, 400);
             return;
         }
 
         const userExists = await User.findOne({ email });
         if (userExists) {
-            httpError(next, new Error("User already exists"), req, 400);
+            httpError(next, new Error('User already exists'), req, 400);
             return;
         }
 
@@ -48,7 +48,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction)
 
         const validPassword = validator.isStrongPassword(password, options);
         if (!validPassword) {
-            httpError(next, new Error("Password is not strong enough"), req, 400);
+            httpError(next, new Error('Password is not strong enough'), req, 400);
             return;
         }
 
@@ -75,7 +75,7 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction)
             });
         } else {
             await User.deleteOne({ email, verified: false });
-            httpError(next, new Error("Failed to send email"), req, 500);
+            httpError(next, new Error('Failed to send email'), req, 500);
             return;
         }
     } catch (error) {
@@ -87,7 +87,16 @@ const signupUser = async (req: SignupRequest, res: Response, next: NextFunction)
 
 const addDetails = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
-        const { username, phoneNumber, rollNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body;
+        const { username, phoneNumber, rollNumber, securityQuestions, branch, joiningYear, intrests, techStack } = req.body as {
+            username: string;
+            phoneNumber: string;
+            rollNumber: string;
+            branch: string;
+            joiningYear: string;
+            intrests: string;
+            techStack: string[];
+            securityQuestions: { question: string; answer: string }[]            
+        };
         const user = await User.findOne({ email: req.user?.email });
 
         if (!user) {

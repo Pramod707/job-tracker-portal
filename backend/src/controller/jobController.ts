@@ -8,7 +8,6 @@ import httpResponse from '../util/httpResponse';
 import httpError from '../util/httpError';
 
 import responseMessage from '../constant/responseMessage';
-import { userInfo } from 'os';
 import StudentDetailsModel from '../model/studentDetailsModel';
 import Task from '../model/taskModel';
 
@@ -52,7 +51,25 @@ const createJob = async (req: Request, res: Response, next: NextFunction): Promi
       type,
       remote,
       salary,
-    } = req.body;
+    } = req.body as {
+      companyName: string;
+      jobTitle: string;
+      jobDescription: {
+        responsibility: string;
+        experience: string;
+        benefits?: string;
+        extraDetails?: string;
+      };
+      locations: string[];
+      applicationLink: string;
+      postedDate: Date;
+      dueDate: Date;
+      requiredTechStack?: string[];
+      eligibility: string;
+      type: string;
+      remote: string;
+      salary: number;
+    };
 
     const job = await Job.create({
       companyName,
@@ -72,7 +89,7 @@ const createJob = async (req: Request, res: Response, next: NextFunction): Promi
     }) as JobDocument;
 
     httpResponse(req, res, 200, responseMessage.SUCCESS, { job, success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     httpError(next, error, req, 500);
     return;
   }
@@ -95,7 +112,7 @@ const getJobs = async (req: Request, res: Response, next: NextFunction): Promise
     };
     const user = await User.findOne({ email: req.user?.email });
 
-    const query: Record<string, any> = {};
+    const query: Record<string, unknown> = {};
 
     if (criteria.companyNames) {
       query.companyName = Array.isArray(criteria.companyNames) ? { $in: criteria.companyNames } : criteria.companyNames;

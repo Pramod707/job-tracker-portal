@@ -12,7 +12,7 @@ import responseMessage from '../constant/responseMessage';
 
 const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body as { email: string; password: string };
 
     if (!email || !password) {
       httpError(next, new Error('Please enter all the fields'), req, 400);
@@ -49,7 +49,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction): Promi
         success: true
       });
     } else {
-      httpError(next, new Error("Failed to send email"), req, 500);
+      httpError(next, new Error('Failed to send email'), req, 500);
       return;
     }
   } catch (error) {

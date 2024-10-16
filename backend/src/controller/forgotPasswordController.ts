@@ -11,9 +11,9 @@ import httpResponse from '../util/httpResponse';
 
 import responseMessage from '../constant/responseMessage';
 
-const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { email } = req.body;
+    const { email } = req.body as { email: string };
     if (!email) {
       httpError(next, new Error('Email is required'), req, 400);
       return;
@@ -35,15 +35,15 @@ const forgotPassword = async (req: Request, res: Response, next: NextFunction): 
 
     await sendResetPasswordEmail({ email, resetURL: `${process.env.CLIENT_URL}/reset-password/${resetToken}` });
     httpResponse(req, res, 200, responseMessage.SUCCESS, { success: true, message: 'Check your email for password reset link' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     httpError(next, error, req, 500);
   }
 };
 
-const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { token } = req.params;
-    const { password } = req.body;
+    const { password } = req.body as { password: string };
 
     if (!password) {
       httpError(next, new Error('Password is required'), req, 400);
@@ -60,7 +60,7 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
 
     const validPassword = validator.isStrongPassword(password, options);
     if (!validPassword) {
-      httpError(next, new Error("Password is not strong enough"), req, 400);
+      httpError(next, new Error('Password is not strong enough'), req, 400);
       return;
     }
 
