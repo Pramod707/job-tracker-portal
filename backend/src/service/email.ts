@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { VERIFICATION, WELCOME, RESET_PASSWORD, FORGOT_PASSWORD,PASSWORD_RESET_SUCCESS } from '../util/emailTemplate';
 import config from '../config/config';
+import logger from '../util/logger';
 
 interface EmailServiceOptions {
     email: string;
@@ -17,9 +18,7 @@ interface WelcomeEmailServiceOptions {
     username: string;
 }
 
-
-
-async function createTransporter() {
+function createTransporter() {
     return nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -30,7 +29,7 @@ async function createTransporter() {
 }
 
 async function sendEmail(email: string, subject: string, html: string): Promise<boolean> {
-    const transporter = await createTransporter();
+    const transporter = createTransporter();
     const mailOptions = {
         from: {
             name: 'Job Tracker Portal',
@@ -45,7 +44,7 @@ async function sendEmail(email: string, subject: string, html: string): Promise<
         await transporter.sendMail(mailOptions);
         return true;
     } catch (error) {
-        console.error('Error sending email:', error);
+        logger.error('Error sending email:', error);
         return false;
     }
 }

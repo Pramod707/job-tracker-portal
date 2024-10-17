@@ -17,7 +17,7 @@ import httpResponse from './util/httpResponse';
 import connectDb from './db/connectDb';
 
 const app = express();
-connectDb();
+void connectDb();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,5 +1,3 @@
-import exp from "constants"
-
 export const VERIFICATION = `
 <!DOCTYPE html>
 <html lang="en">
