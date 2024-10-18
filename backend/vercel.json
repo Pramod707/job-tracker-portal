@@ -12,10 +12,11 @@
         "dest": "dist/server.js"
       }
     ],
-    "redirects": [
+    "rewrites":[
       {
-        "source": "/api/(.*)",
-        "destination": "/api"
+        "source" : "/(.*)",
+        "destination" : "/"
+
       }
     ]
   }
