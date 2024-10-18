@@ -11,6 +11,12 @@
         "src": "/(.*)",
         "dest": "dist/server.js"
       }
+    ],
+    "redirects": [
+      {
+        "source": "/api/(.*)",
+        "destination": "/api"
+      }
     ]
   }
   
