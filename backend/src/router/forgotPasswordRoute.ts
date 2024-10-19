@@ -4,8 +4,12 @@ import { forgotPassword, resetPassword } from '../controller/forgotPasswordContr
 
 const router = express.Router();
 
-router.post('/forgot-password', forgotPassword);
+router.post('/forgot-password', (req, res, next) => {
+    forgotPassword(req, res, next).catch(next);
+});
 
-router.post('/reset-password/:token', resetPassword);
+router.post('/reset-password/:token', (req, res, next) => {
+    resetPassword(req, res, next).catch(next);
+});
 
 export default router;
